@@ -1,6 +1,14 @@
 'use client';
 
-const HeroSection = () => {
+import { ApodData } from "@/components/HomePage";
+import Image from 'next/image';
+
+const HeroSection = ({
+  apodData,
+}:{
+  apodData: ApodData
+}) => {
+  console.log('hero section', apodData);
   return (
     <div className="hero-section-container bg-white">
       <div className="relative isolate px-6 pt-14 lg:px-8">
@@ -44,6 +52,14 @@ const HeroSection = () => {
               <a href="#" className="text-sm/6 font-semibold text-gray-900">
                 Learn more <span aria-hidden="true">→</span>
               </a>
+            </div>
+            <div className="mt-10 flex items-center justify-center gap-x-6 relative">
+              <Image
+                alt=""
+                src={apodData.url}
+                className="rounded-lg w-full h-full !relative"
+                fill={true}
+              />
             </div>
           </div>
         </div>
