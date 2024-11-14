@@ -8,7 +8,6 @@ const HeroSection = ({
 }:{
   apodData: ApodData
 }) => {
-  console.log('hero section', apodData);
   return (
     <div className="hero-section-container bg-white">
       <div className="relative isolate px-6 pt-14 lg:px-8">
