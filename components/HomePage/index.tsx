@@ -28,7 +28,7 @@ const HomePage = async ({children}:{children?: React.ReactNode}) => {
 
   return (
       <div>
-      {apodData && <HeroSection apodData={apodData} />}
+      <HeroSection apodData={apodData} />
       <FeatureSection />
       {children && <div>{children}</div>}
     </div>
