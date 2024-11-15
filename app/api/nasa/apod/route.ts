@@ -23,9 +23,9 @@ export async function GET(): Promise<Response> {
     });
   } catch (error) {
     if (error instanceof Error) {
-      console.error('Error fetching APOD data:', error.message);
+      console.error('Error fetching APOD data in route.ts:', error.message);
     } else {
-      console.error('Error fetching APOD data:', error);
+      console.error('Error fetching APOD data in route.ts:', error);
     }
     return new Response(JSON.stringify({ message: 'Error fetching Astronomy Picture of the Day' }), {
       status: 500,
