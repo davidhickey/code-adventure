@@ -17,7 +17,7 @@ async function fetchApodData(): Promise<ApodData> {
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch APOD data: ${response}.`);
+    throw new Error(`Failed to fetch APOD data: ${response.statusText}. Status code: ${response.status}`);
   }
 
   return response.json();
