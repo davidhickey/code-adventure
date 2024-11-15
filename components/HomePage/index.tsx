@@ -15,7 +15,7 @@ async function fetchApodData(): Promise<ApodData> {
   const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/nasa/apod`);
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch APOD data: ${response.statusText}. Status code: ${response.status}`);
+    throw new Error(`Failed to fetch APOD data: ${response.statusText}. Status code: ${response.status}. On Base URL - ${process.env.NEXT_PUBLIC_BASE_URL}`);
   }
 
   return response.json();
