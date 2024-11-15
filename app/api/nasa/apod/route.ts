@@ -11,7 +11,7 @@ export async function GET(): Promise<Response> {
     const response = await fetch(`${NASA_API_URL}?api_key=${NASA_API_KEY}`);
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch APOD data: ${response.statusText}`);
+      throw new Error(`Failed to fetch APOD data in route.ts: ${response.statusText}`);
     }
 
     const data = await response.json();
