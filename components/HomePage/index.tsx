@@ -12,9 +12,7 @@ export type ApodData = {
 }
 
 async function fetchApodData(): Promise<ApodData> {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/nasa/apod`, {
-    next: { revalidate: 3600 }, // Optional: Enables ISR (Incremental Static Regeneration)
-  });
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/nasa/apod`);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch APOD data: ${response.statusText}. Status code: ${response.status}`);
@@ -27,8 +25,8 @@ const HomePage = async ({children}:{children?: React.ReactNode}) => {
   const apodData = await fetchApodData();
 
   return (
-      <div>
-      <HeroSection apodData={apodData} />
+    <div>
+      {apodData  && <HeroSection apodData={apodData} />}
       <FeatureSection />
       {children && <div>{children}</div>}
     </div>
