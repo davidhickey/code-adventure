@@ -14,17 +14,18 @@ export type ApodData = {
 
 
 const HomePage = async ({children}:{children?: React.ReactNode}) => {
-  async function fetchApodData(): Promise<ApodData> {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/nasa/apod`);
+  // async function fetchApodData(): Promise<ApodData> {
+  //   const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/nasa/apod`);
   
-    if (!response.ok) {
-      throw new Error(`Failed to fetch APOD data: ${response.statusText}. Status code: ${response.status}. On Base URL - ${process.env.NEXT_PUBLIC_BASE_URL}. Url: ${response.url}, Type: ${response.type}.`);
-    }
+  //   if (!response.ok) {
+  //     throw new Error(`Failed to fetch APOD data: ${response.statusText}. Status code: ${response.status}. On Base URL - ${process.env.NEXT_PUBLIC_BASE_URL}. Url: ${response.url}, Type: ${response.type}.`);
+  //   }
   
-    return response.json();
-  }
+  //   return response.json();
+  // }
 
-  const apodData = await fetchApodData();
+  // const apodData = await fetchApodData();
+  const apodData = null;
 
   return (
     <div>
