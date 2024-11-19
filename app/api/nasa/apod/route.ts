@@ -15,7 +15,6 @@ export async function GET(): Promise<Response> {
     }
 
     const data = await response.json();
-    console.log('server data ', data);
 
     // Respond with the data
     return new Response(JSON.stringify(data), {
