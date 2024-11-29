@@ -1,5 +1,6 @@
 import HeroSection from "@/components/sections/Hero";
 import FeatureSection from "../sections/Feature";
+import CalendarWidget from "../CalendarWidget";
 
 export type ApodData = {
   date: string;
@@ -30,6 +31,7 @@ const HomePage = async ({children}:{children?: React.ReactNode}) => {
     <div>
       {apodData  && <HeroSection apodData={apodData} />}
       <FeatureSection />
+      <CalendarWidget />
       {children && <div>{children}</div>}
     </div>
   );
