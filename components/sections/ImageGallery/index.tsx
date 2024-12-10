@@ -56,12 +56,12 @@ const ImageGallery = ({album}: {album: ImageGalleryAlbum}) => {
       photos={photoAlbum}
       render={{ image: renderNextImage }}
       defaultContainerWidth={1200}
-      // sizes={{
-      //   size: "1168px",
-      //   sizes: [
-      //     { viewport: "(max-width: 1200px)", size: "calc(100vw - 32px)" },
-      //   ],
-      // }}
+      sizes={{
+        size: "1168px",
+        sizes: [
+          { viewport: "(max-width: 1200px)", size: "calc(100vw - 32px)" },
+        ],
+      }}
     />
   );
 }
