@@ -1,5 +1,4 @@
 'use client';
-
 import { ApodData } from "@/components/HomePage";
 import Image from 'next/image';
 
@@ -8,6 +7,7 @@ const HeroSection = ({
 }:{
   apodData: ApodData
 }) => {
+
   return (
     <div className="hero-section-container bg-white">
       <div className="relative isolate px-6 pt-14 lg:px-8">
@@ -24,7 +24,7 @@ const HeroSection = ({
           />
         </div>
         <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
-          <div className="hidden sm:mb-8 sm:flex sm:justify-center">
+          <div className="sm:mb-8 sm:flex sm:justify-center">
             <div className="relative rounded-full px-3 py-1 text-sm/6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
               Announcing our next round of funding.{' '}
               <a href="#" className="font-semibold text-indigo-600">
@@ -52,13 +52,17 @@ const HeroSection = ({
                 Learn more <span aria-hidden="true">→</span>
               </a>
             </div>
-            <div className="mt-10 flex items-center justify-center gap-x-6 relative">
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-4 relative">
               <Image
                 alt=""
                 src={apodData.url}
-                className="rounded-lg w-full h-full !relative"
+                className="rounded-lg w-full h-full !relative flex flex-row"
                 fill={true}
               />
+              <div className="image-description flex flex-row flex-wrap justify-center gap-4">
+                <h2 className="text-2xl font-semibold">{apodData.title}</h2>
+                <p className="text-lg">{apodData.explanation}</p>
+              </div>
             </div>
           </div>
         </div>
