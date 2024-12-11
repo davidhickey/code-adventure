@@ -1,12 +1,12 @@
 import { ApodData } from "@/components/HomePage";
-import { ImageGalleryAlbum } from "@/components/sections/ImageGallery";
+import { ImageGalleryItem } from "@/components/sections/ImageGallery";
 import Image from "next/image";
 import {
   RenderImageContext,
   RenderImageProps,
 } from "react-photo-album";
 
-export const transformNasaImagesToPhotoAlbum = (nasaImages: ApodData[]): ImageGalleryAlbum => {
+export const transformNasaImagesToPhotoAlbum = (nasaImages: ApodData[]): ImageGalleryItem[] => {
   //filter out non image types
   const justImages = nasaImages.filter((image) => image.media_type === "image");
   return justImages.map((image) => {
@@ -16,6 +16,8 @@ export const transformNasaImagesToPhotoAlbum = (nasaImages: ApodData[]): ImageGa
       width: 400,
       height: 400,
       date: image.date,
+      description: image.explanation,
+      title: image.title,
     }
   });
 }
@@ -39,7 +41,7 @@ export const renderNextImage = (
         alt={alt}
         title={title}
         sizes={sizes}
-        className="!width-auto !height-full object-cover !object-center"
+        className="!width-auto !height-full object-cover !object-center rounded-md"
         placeholder={"blurDataURL" in photo ? "blur" : undefined}
       />
     </div>

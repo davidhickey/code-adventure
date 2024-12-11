@@ -8,19 +8,21 @@ import { fetchApodData } from "@/components/HomePage";
 import { UnstableInfiniteScroll as InfiniteScroll } from "react-photo-album/scroll";
 
 
-export type ImageGalleryAlbum = {
+export type ImageGalleryItem = {
   src: string;
   alt: string;
   width: number;
   height: number;
-  date: string;
-}[];
+  date?: string;
+  description?: string;
+  title?: string;
+};
 
-const fetchMoreApodData = async (): Promise<ImageGalleryAlbum | null> => {
+const fetchMoreApodData = async (): Promise<ImageGalleryItem[] | null> => {
   return transformNasaImagesToPhotoAlbum(await fetchApodData(20));
 }
 
-const ImageGallery = ({album, title}: {album: ImageGalleryAlbum, title?:string}) => {
+const ImageGallery = ({album, title}: {album: ImageGalleryItem[], title?:string}) => {
   return (
     <div className="image-gallery-container">
       {title && <h2 className="text-3xl font-semibold text-gray-900 w-full text-center py-8">{title}</h2>}
@@ -29,7 +31,12 @@ const ImageGallery = ({album, title}: {album: ImageGalleryAlbum, title?:string})
       <InfiniteScroll photos={album} fetch={fetchMoreApodData}>
         <RowsPhotoAlbum
           photos={[]}
-          render={{ image: renderNextImage}}
+          render={{ 
+            image: renderNextImage,
+            extras: (_, { photo: {date}}: {photo:ImageGalleryItem}) => (
+              <div className="absolute bottom-3 right-3 p-2 text-white bg-black bg-opacity-50 rounded-br-md rounded-tl-md">Published: {date}</div>
+            ),
+          }}
           defaultContainerWidth={1200}
           padding={12}
           spacing={0}
