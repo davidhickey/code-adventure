@@ -16,6 +16,14 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'images-assets.nasa.gov',
       },
+      {
+        protocol: 'https',
+        hostname: 'www.youtube.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'img.youtube.com'
+      }
     ],
   },
 

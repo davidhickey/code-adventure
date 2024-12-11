@@ -1,5 +1,4 @@
 "use client";
-import { NasaImages } from "@/app/space-gallery/page";
 import "react-photo-album/rows.css";
 import Image from "next/image";
 import {
@@ -9,7 +8,12 @@ import {
 } from "react-photo-album";
 import "react-photo-album/rows.css";
 
-type ImageGalleryAlbum = NasaImages["collection"]["items"];
+export type ImageGalleryAlbum = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+}[];
 
 const renderNextImage = (
   { alt = "", title, sizes }: RenderImageProps,
@@ -30,39 +34,27 @@ const renderNextImage = (
         alt={alt}
         title={title}
         sizes={sizes}
+        className="!width-auto !height-full object-cover !object-center"
         placeholder={"blurDataURL" in photo ? "blur" : undefined}
       />
     </div>
   );
 }
 
-const transformNasaImagesToPhotoAlbum = (nasaImages: ImageGalleryAlbum) => {
-  return nasaImages.map((image) => {
-    return {
-      src: image.links[0].href,
-      alt: image.data[0].title,
-      caption: image.data[0].description,
-      width: 400,
-      height: 300,
-    }
-  });
-}
 
-const ImageGallery = ({album}: {album: ImageGalleryAlbum}) => {
-  const photoAlbum = transformNasaImagesToPhotoAlbum(album);
-
+const ImageGallery = ({album, title}: {album: ImageGalleryAlbum, title?:string}) => {
   return (
-    <RowsPhotoAlbum
-      photos={photoAlbum}
-      render={{ image: renderNextImage }}
-      defaultContainerWidth={1200}
-      sizes={{
-        size: "1168px",
-        sizes: [
-          { viewport: "(max-width: 1200px)", size: "calc(100vw - 32px)" },
-        ],
-      }}
-    />
+    <div className="image-gallery-container">
+      {title && <h2 className="text-3xl font-semibold text-gray-900 w-full text-center py-8">{title}</h2>}
+    
+      <div className="photo-album-wrapper">
+        <RowsPhotoAlbum
+          photos={album}
+          render={{ image: renderNextImage }}
+          defaultContainerWidth={1200}
+        />
+      </div>
+    </div>
   );
 }
 
