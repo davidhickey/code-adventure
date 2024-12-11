@@ -11,6 +11,7 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        primaryPurple: "#4F46E5"
       },
       fontFamily: {
         sans: ['Inter var', 'system-ui', 'sans-serif'],
