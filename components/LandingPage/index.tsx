@@ -3,9 +3,11 @@ import Footer from "@/components/Footer";
 
 const LandingPage = ({children}: {children: React.ReactNode}) => {
   return (
-    <div>
+    <div className="landing-page-wrapper">
       <Header />
-      {children}
+      <div className="landing-page-main min-h-screen px-6">
+        {children}
+      </div>
       <Footer />
     </div>
   );

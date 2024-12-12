@@ -1,4 +1,5 @@
-export async function GET(): Promise<Response> {
+import { type NextRequest } from "next/server";
+export async function GET(req:NextRequest): Promise<Response> {
   try {
     // NASA API URL and key
     const NASA_API_URL = 'https://api.nasa.gov/planetary/apod';
@@ -7,8 +8,18 @@ export async function GET(): Promise<Response> {
       throw new Error('NASA_API_KEY is not set');
     }
 
+    const url = new URL(`${NASA_API_URL}?api_key=${NASA_API_KEY}`);
+
+    const searchParams = new URLSearchParams(req.nextUrl.searchParams);
+    const count = searchParams.get('count');
+    if (count) {
+      url.searchParams.append('count', count);
+    }
+
+    url.searchParams.append('thumbs', 'true');
+
     // Fetch data from NASA's API
-    const response = await fetch(`${NASA_API_URL}?api_key=${NASA_API_KEY}`);
+    const response = await fetch(url);
 
     if (!response.ok) {
       throw new Error(`Failed to fetch APOD data in route.ts: ${response.statusText}`);
