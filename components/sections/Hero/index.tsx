@@ -1,5 +1,4 @@
-'use client';
-import { ApodData } from "@/components/HomePage";
+import { ApodData } from "@/lib/apis/nasa";
 import { Button } from "@headlessui/react";
 import Image from 'next/image';
 import Link from "next/link";

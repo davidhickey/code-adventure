@@ -3,8 +3,8 @@ import {
   RowsPhotoAlbum,
 } from "react-photo-album";
 import "react-photo-album/rows.css";
-import { renderNextImage, transformNasaImagesToPhotoAlbum } from "./helpers";
-import { fetchApodData } from "@/components/HomePage";
+import { renderNextImage, fetchMoreApodData } from "./helpers";
+
 import { UnstableInfiniteScroll as InfiniteScroll } from "react-photo-album/scroll";
 
 
@@ -17,10 +17,6 @@ export type ImageGalleryItem = {
   description?: string;
   title?: string;
 };
-
-const fetchMoreApodData = async (): Promise<ImageGalleryItem[] | null> => {
-  return transformNasaImagesToPhotoAlbum(await fetchApodData(20));
-}
 
 const ImageGallery = ({album, title}: {album: ImageGalleryItem[], title?:string}) => {
   return (

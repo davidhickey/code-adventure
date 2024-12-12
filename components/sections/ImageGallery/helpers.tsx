@@ -1,10 +1,15 @@
-import { ApodData } from "@/components/HomePage";
+import { ApodData } from "@/lib/apis/nasa";
 import { ImageGalleryItem } from "@/components/sections/ImageGallery";
 import Image from "next/image";
 import {
   RenderImageContext,
   RenderImageProps,
 } from "react-photo-album";
+import { fetchApodData } from "@/lib/apis/nasa";
+
+export const fetchMoreApodData = async (): Promise<ImageGalleryItem[] | null> => {
+  return transformNasaImagesToPhotoAlbum(await fetchApodData(20));
+}
 
 export const transformNasaImagesToPhotoAlbum = (nasaImages: ApodData[]): ImageGalleryItem[] => {
   //filter out non image types
