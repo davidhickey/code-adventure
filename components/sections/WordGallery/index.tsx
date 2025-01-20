@@ -4,15 +4,17 @@ import { useRef, useState, useMemo, useEffect, Suspense } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Billboard, Text, TrackballControls } from '@react-three/drei'
 import { generate } from 'random-words';
+import { useRouter } from 'next/navigation';
 
 
 function Word({ children, ...props }) {
-  const color = new THREE.Color()
-  const fontProps = { font: '/Inter_Bold.ttf', fontSize: 2.5, letterSpacing: -0.05, lineHeight: 1, 'material-toneMapped': false }
-  const ref = useRef()
-  const [hovered, setHovered] = useState(false)
-  const over = (e) => (e.stopPropagation(), setHovered(true))
-  const out = () => setHovered(false)
+  const router = useRouter();
+  const color = new THREE.Color();
+  const fontProps = { font: '/Inter_Bold.ttf', fontSize: 2.5, letterSpacing: -0.05, lineHeight: 1, 'material-toneMapped': false };
+  const ref = useRef();
+  const [hovered, setHovered] = useState(false);
+  const over = (e) => (e.stopPropagation(), setHovered(true));
+  const out = () => setHovered(false);
   // Change the mouse cursor on hover¨
   useEffect(() => {
     if (hovered) document.body.style.cursor = 'pointer'
@@ -23,8 +25,8 @@ function Word({ children, ...props }) {
     ref.current.material.color.lerp(color.set(hovered ? '#fa2720' : 'white'), 0.1)
   })
   return (
-    <Billboard {...props}>
-      <Text ref={ref} onPointerOver={over} onPointerOut={out} onClick={() => console.log('clicked')} {...fontProps} children={children} />
+    <Billboard {...props} onPointerOver={over} onPointerOut={out}>
+      <Text ref={ref} {...fontProps}>{children}</Text>
     </Billboard>
   )
 }
@@ -40,14 +42,13 @@ function Cloud({ count = 4, radius = 20 }) {
       for (let j = 0; j < count; j++) temp.push([new THREE.Vector3().setFromSpherical(spherical.set(radius, phiSpan * i, thetaSpan * j)), generate()])
     return temp
   }, [count, radius])
-  return words.map(([pos, word], index) => <Word key={index} position={pos} children={word} />)
+  return words.map(([pos, word], index) => <Word key={index} position={pos}>{word}</Word>)
 }
 
 const WordGallery = () => {
   return (
-    <div>
-      <h1>Test Gallery</h1>
-      <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 35], fov: 90 }}>
+    <div className='min-h-screen h-full w-full bg-[#202025]'>
+      <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 35], fov: 90 }} style={{height: '100vh'}} className='h-full min-h-screen w-full'>
       <fog attach="fog" args={['#202025', 0, 80]} />
       <Suspense fallback={null}>
         <group rotation={[10, 10.5, 10]}>

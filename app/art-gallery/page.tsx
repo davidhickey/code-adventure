@@ -27,7 +27,7 @@ const ArtGallery = () => {
   ];
 
   return (
-    <div>
+    <div className="h-full">
       <h1>Art Gallery</h1>
       {/* <InteractiveGallery images={images}/> */}
       <TestGallery />
