@@ -1,5 +1,4 @@
 import { InteractiveGallery } from "@/components/sections/InteractiveGallery";
-import TestGallery from "@/components/sections/WordGallery";
 
 
 export type ThreeImage = {
@@ -27,10 +26,9 @@ const ArtGallery = () => {
   ];
 
   return (
-    <div className="h-full">
+    <div className="h-full min-h-screen w-full bg-[#191920]">
       <h1>Art Gallery</h1>
-      {/* <InteractiveGallery images={images}/> */}
-      <TestGallery />
+      <InteractiveGallery images={images}/>
     </div>
   );
 }
