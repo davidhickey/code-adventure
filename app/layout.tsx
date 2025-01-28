@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import LandingPage from "@/components/LandingPage";
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { ThemeContextProvider } from "@/store/";
+
 
 
 const geistSans = localFont({
@@ -31,7 +33,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <LandingPage>{children}</LandingPage>
+        <ThemeContextProvider>
+          <LandingPage>
+            {children}
+          </LandingPage>
+        </ThemeContextProvider>
         <SpeedInsights />
       </body>
     </html>

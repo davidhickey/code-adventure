@@ -1,10 +1,11 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { Dialog, DialogPanel } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon, SunIcon, MoonIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import Link from 'next/link';
+import ThemeContext from '@/store';
 
 const navigation = [
   { name: 'Product', href: '#' },
@@ -14,26 +15,14 @@ const navigation = [
 ]
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const {isDarkTheme, toggleThemeHandler} = useContext(ThemeContext);
+
+  console.log('is dark theme? ', isDarkTheme);
 
   const toggleTheme = () => {
-    if (document.documentElement.classList.contains('dark')) {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    } else {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    }
-
-    const theme = localStorage.getItem('theme');
-    console.log('theme', theme);
+    toggleThemeHandler();
   }
 
-  useEffect(() => {
-    const theme = localStorage.getItem('theme');
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    }
-  }, []);
 
   return (
     <header className="relative inset-x-0 top-0 z-50">
@@ -69,7 +58,7 @@ const Header = () => {
             ))}
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <button onClick={toggleTheme} className="flex justify-center items-center m-auto text-lg w-fit dark:bg-sky-500/50 bg-cyan-700 hover:bg-cyan-800 transition-color duration-200 ease-in-out py-3 px-10 rounded-lg text-gray-50 font-semibold">Toggle Theme</button>
+            <button onClick={toggleTheme} className="">{isDarkTheme ? <SunIcon className='size-8'/> : <MoonIcon className='size-8'/>}</button>
           </div>
         </nav>
         <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
@@ -110,7 +99,7 @@ const Header = () => {
                   ))}
                 </div>
                 <div className="py-6">
-                  <button onClick={toggleTheme} className="flex justify-center items-center m-auto text-lg w-fit dark:bg-sky-500/50 bg-cyan-700 hover:bg-cyan-800 transition-color duration-200 ease-in-out py-3 px-10 rounded-lg text-gray-50 font-semibold">Toggle Theme</button>
+                <button onClick={toggleTheme} className="">{isDarkTheme ? <SunIcon className='size-8'/> : <MoonIcon className='size-8'/>}</button>
                 </div>
               </div>
             </div>
