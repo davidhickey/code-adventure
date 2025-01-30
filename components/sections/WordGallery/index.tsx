@@ -1,10 +1,9 @@
 "use client";
 import * as THREE from 'three'
-import { useRef, useState, useMemo, useEffect, Suspense, ReactHTML, ReactHTMLElement } from 'react'
+import { useRef, useState, useMemo, useEffect, Suspense } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Billboard, Text, TrackballControls } from '@react-three/drei'
 import { generate } from 'random-words';
-import { useRouter } from 'next/navigation';
 
 
 //create a game that passes in a verse from a song
@@ -36,7 +35,6 @@ function Word({ word, id, currentWordInVerse, emitCurrentWord, position, ...prop
   emitCurrentWord: (id: number, word: string) => void,
   position: THREE.Vector3 | string | string[];
 }) {
-  const router = useRouter();
   const color = new THREE.Color();
   const fontProps = { font: '/Inter_Bold.ttf', fontSize: 2.5, letterSpacing: -0.05, lineHeight: 1, 'material-toneMapped': false };
   const ref = useRef<THREE.Mesh>(null);
@@ -51,7 +49,7 @@ function Word({ word, id, currentWordInVerse, emitCurrentWord, position, ...prop
     };
   }, [hovered])
   // Tie component to the render-loop
-  useFrame(({ camera }) => {
+  useFrame(() => {
     if (ref.current) {
       const material = Array.isArray(ref.current.material) ? ref.current.material[0] as THREE.MeshBasicMaterial : ref.current.material as THREE.MeshBasicMaterial;
       material.color.lerp(color.set(hovered ? '#fa2720' : 'white'), 0.1);
@@ -88,7 +86,7 @@ function Cloud({
       }
     }
 
-    const tempWithNeil = temp.map(([pos, word], index) => {
+    const tempWithNeil = temp.map(([pos], index) => {
       return [pos, neil[index]?.word ?? '']
     });
 
