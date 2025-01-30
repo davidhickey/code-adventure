@@ -23,10 +23,14 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'img.youtube.com'
-      }
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.pexels.com'
+      },
     ],
   },
-
+  transpilePackages: ['three']
 };
 
 export default nextConfig;
