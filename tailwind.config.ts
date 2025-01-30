@@ -13,15 +13,15 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
         primaryPurple: "#4F46E5",
-        lPrimaryGreen: "#283618",
+        lPrimaryGreen: "#283618", //text
         lSecLightGreen: "#606c38",
-        lSecCream: "#fefae0",
+        lSecCream: "#fefae0", //bg
         lSecPeach: "#dda15e",
-        lSecBurntOrange: "#bc6c25",
-        dPrimaryGray: "#e5e5e5",
+        lSecBurntOrange: "#bc6c25", //accent
+        dPrimaryGray: "#e5e5e5", //text
         dSecWhite: "#ffffff",
-        dSecMaize: "#fca311",
-        dSecDarkBlue: "#14213d",
+        dSecMaize: "#fca311", //accent
+        dSecDarkBlue: "#14213d", //bg
         dSecBlack: "#000000",
 
       },
