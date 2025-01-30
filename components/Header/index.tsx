@@ -16,8 +16,6 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const {isDarkTheme, toggleThemeHandler} = useContext(ThemeContext);
 
-  console.log('is dark theme? ', isDarkTheme);
-
   const toggleTheme = () => {
     toggleThemeHandler();
   }

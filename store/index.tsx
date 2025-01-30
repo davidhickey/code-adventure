@@ -26,14 +26,11 @@ export function ThemeContextProvider(
   }
 
   function toggleThemeHandler(): void {
-    console.log('toggling theme handler');
     if (document.documentElement.classList.contains('dark')) {
-      console.log('switch to light theme');
       document.documentElement.classList.remove('dark');
       localStorage.setItem('theme', 'light');
       setIsDarkTheme(false);
     } else {
-      console.log('switch to dark theme');
       document.documentElement.classList.add('dark');
       localStorage.setItem('theme', 'dark');
       setIsDarkTheme(true);
