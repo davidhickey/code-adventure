@@ -3,7 +3,7 @@
 import * as THREE from 'three';
 import { useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { useCursor, MeshReflectorMaterial, Image, Text, Environment } from '@react-three/drei';
+import { useCursor, Image, Text, Environment } from '@react-three/drei';
 import { useRoute, useLocation } from 'wouter';
 import { easing } from 'maath';
 import getUuid from 'uuid-by-string';
@@ -20,18 +20,6 @@ export const InteractiveGallery = ({images}: {images: ThreeImage[] }) => {
       <Frames images={images} />
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[50, 50]} />
-        {/* <MeshReflectorMaterial
-          blur={[300, 100]}
-          resolution={2048}
-          mixBlur={1}
-          mixStrength={80}
-          roughness={1}
-          depthScale={1.2}
-          minDepthThreshold={0.4}
-          maxDepthThreshold={1.4}
-          color="#050505"
-          metalness={0.5}
-        /> */}
       </mesh>
     </group>
     <Environment preset="city" />
@@ -47,7 +35,7 @@ function Frames({ images }: { images: ThreeImage[] }) {
   const [, params] = useRoute('/item/:id')
   const [, setLocation] = useLocation()
   useEffect(() => {
-    clicked.current = ref.current?.getObjectByName(params?.id)
+    clicked.current = params?.id ? ref.current?.getObjectByName(params.id) ?? null : null
     if (clicked.current) {
       clicked.current.parent?.updateWorldMatrix(true, true)
       clicked.current.parent?.localToWorld(p.set(0, GOLDENRATIO / 2, 1.25))
@@ -71,7 +59,7 @@ function Frames({ images }: { images: ThreeImage[] }) {
   )
 }
 
-function Frame({ url, c = new THREE.Color(), ...props }: { url: string; c?: THREE.Color; [key: string]: any }) {
+function Frame({ url, c = new THREE.Color(), ...props }: { url: string; c?: THREE.Color; }) {
   const image = useRef<THREE.Mesh>(null!)
   const frame = useRef<THREE.Mesh>(null!)
   const [, params] = useRoute('/item/:id')
@@ -81,9 +69,11 @@ function Frame({ url, c = new THREE.Color(), ...props }: { url: string; c?: THRE
   const isActive = params?.id === name
   useCursor(hovered)
   useFrame((state, dt) => {
-    image.current.material.zoom = 2 + Math.sin(rnd * 10000 + state.clock.elapsedTime / 3) / 2
+    (image.current.material as any).zoom = 2 + Math.sin(rnd * 10000 + state.clock.elapsedTime / 3) / 2
     easing.damp3(image.current.scale, [0.85 * (!isActive && hovered ? 0.85 : 1), 0.9 * (!isActive && hovered ? 0.905 : 1), 1], 0.1, dt)
-    easing.dampC(frame.current.material.color, hovered ? 'orange' : 'white', 0.1, dt)
+    if (frame.current.material instanceof THREE.MeshBasicMaterial) {
+      easing.dampC(frame.current.material.color, hovered ? 'orange' : 'white', 0.1, dt)
+    }
   })
   return (
     <group {...props}>
