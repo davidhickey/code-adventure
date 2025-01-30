@@ -99,7 +99,7 @@ function Cloud({
 const WordGallery = () => {
   const [currentWordInVerse, setCurrentWordInVerse] = useState<null | number>(null);
 
-  const handleUpdateCurrentWord = (id: number, word: string) => {
+  const handleUpdateCurrentWord = (id: number) => {
     if (id === 0 && currentWordInVerse === null) {
       setCurrentWordInVerse(0);
     } else if (currentWordInVerse !== null && id === currentWordInVerse + 1) {

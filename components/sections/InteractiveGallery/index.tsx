@@ -59,7 +59,7 @@ function Frames({ images }: { images: ThreeImage[] }) {
   )
 }
 
-function Frame({ url, c, ...props }: { url: string; c?: THREE.Color; }) {
+function Frame({ url, ...props }: { url: string }) {
   const image = useRef<THREE.Mesh>(null!)
   const frame = useRef<THREE.Mesh>(null!)
   const [, params] = useRoute('/item/:id')
