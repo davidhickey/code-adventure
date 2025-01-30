@@ -59,7 +59,7 @@ function Frames({ images }: { images: ThreeImage[] }) {
   )
 }
 
-function Frame({ url, c = new THREE.Color(), ...props }: { url: string; c?: THREE.Color; }) {
+function Frame({ url, c, ...props }: { url: string; c?: THREE.Color; }) {
   const image = useRef<THREE.Mesh>(null!)
   const frame = useRef<THREE.Mesh>(null!)
   const [, params] = useRoute('/item/:id')
@@ -69,7 +69,7 @@ function Frame({ url, c = new THREE.Color(), ...props }: { url: string; c?: THRE
   const isActive = params?.id === name
   useCursor(hovered)
   useFrame((state, dt) => {
-    (image.current.material as any).zoom = 2 + Math.sin(rnd * 10000 + state.clock.elapsedTime / 3) / 2
+    (image.current.material as THREE.MeshStandardMaterial).emissiveIntensity = 2 + Math.sin(rnd * 10000 + state.clock.elapsedTime / 3) / 2
     easing.damp3(image.current.scale, [0.85 * (!isActive && hovered ? 0.85 : 1), 0.9 * (!isActive && hovered ? 0.905 : 1), 1], 0.1, dt)
     if (frame.current.material instanceof THREE.MeshBasicMaterial) {
       easing.dampC(frame.current.material.color, hovered ? 'orange' : 'white', 0.1, dt)
@@ -89,7 +89,7 @@ function Frame({ url, c = new THREE.Color(), ...props }: { url: string; c?: THRE
           <boxGeometry />
           <meshBasicMaterial toneMapped={false} fog={false} />
         </mesh>
-        <Image raycast={() => null} ref={image} position={[0, 0, 0.7]} url={url} />
+        <Image raycast={() => null} ref={image} position={[0, 0, 0.7]} url={url} alt="art-image" />
       </mesh>
       <Text maxWidth={0.1} anchorX="left" anchorY="top" position={[0.55, GOLDENRATIO, 0]} fontSize={0.025}>
         {name.split('-').join(' ')}
