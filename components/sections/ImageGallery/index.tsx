@@ -4,7 +4,6 @@ import {
 } from "react-photo-album";
 import "react-photo-album/rows.css";
 import { renderNextImage, fetchMoreApodData } from "./helpers";
-
 import { UnstableInfiniteScroll as InfiniteScroll } from "react-photo-album/scroll";
 
 
@@ -20,11 +19,11 @@ export type ImageGalleryItem = {
 
 const ImageGallery = ({album, title}: {album: ImageGalleryItem[], title?:string}) => {
   return (
-    <div className="image-gallery-container">
-      {title && <h2 className="text-3xl font-semibold text-gray-900 w-full text-center py-8">{title}</h2>}
+    <div className="image-gallery-container text-lPrimaryGreen dark:text-dPrimaryGray">
+      {title && <h2 className="text-3xl font-semibold w-full text-center py-8">{title}</h2>}
     
       <div className="photo-album-wrapper">
-      <InfiniteScroll photos={album} fetch={fetchMoreApodData}>
+      <InfiniteScroll photos={album} fetch={fetchMoreApodData} loading={<div className="animate-pulse w-full text-center py-8 pt-12 text-2xl sm:text-3xl">Loading...</div>}>
         <RowsPhotoAlbum
           photos={[]}
           render={{ 
