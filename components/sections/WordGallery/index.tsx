@@ -1,9 +1,12 @@
 "use client";
 import * as THREE from 'three'
-import { useRef, useState, useMemo, useEffect, Suspense } from 'react'
+import { useContext, useRef, useState, useMemo, useEffect, Suspense } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Billboard, Text, TrackballControls } from '@react-three/drei'
 import { generate } from 'random-words';
+import Button from '@/components/elements/Button';
+import ThemeContext from '@/store';
+
 
 
 //create a game that passes in a verse from a song
@@ -35,6 +38,7 @@ function Word({ word, id, currentWordInVerse, emitCurrentWord, position, ...prop
   emitCurrentWord: (id: number, word: string) => void,
   position: THREE.Vector3 | string | string[];
 }) {
+  const {isDarkTheme} = useContext(ThemeContext);
   const color = new THREE.Color();
   const fontProps = { font: '/Inter_Bold.ttf', fontSize: 2.5, letterSpacing: -0.05, lineHeight: 1, 'material-toneMapped': false };
   const ref = useRef<THREE.Mesh>(null);
@@ -52,7 +56,7 @@ function Word({ word, id, currentWordInVerse, emitCurrentWord, position, ...prop
   useFrame(() => {
     if (ref.current) {
       const material = Array.isArray(ref.current.material) ? ref.current.material[0] as THREE.MeshBasicMaterial : ref.current.material as THREE.MeshBasicMaterial;
-      material.color.lerp(color.set(hovered ? '#fa2720' : 'white'), 0.1);
+      material.color.lerp(color.set(hovered ? '#fa2720' : isDarkTheme ? '#e5e5e5' : '#606c38' ), 0.1);
       material.color.lerp(color.set(currentWordInVerse !== null && id <= currentWordInVerse ? '#20CC00' : 'white'), 0.1);
     }
   })
@@ -109,15 +113,14 @@ const WordGallery = () => {
   }
 
   return (
-    <div className='min-h-screen h-full w-full bg-[#202025] relative'>
-      {currentWordInVerse !== null && 
+    <div className='min-h-screen h-full w-full bg-lSecCream dark:bg-dSecDarkBlue text-lPrimaryGreen dark:text-dPrimaryGray rounded-md border border-lPrimaryGreen dark:border-dSecMaize relative'>
         <div className="words-so-far-container absolute top-0 left-0 p-4">
-          <h1 className='text-white text-2xl'>Words so far:</h1>
-          <p className='text-white text-xl'>{neil.slice(0, currentWordInVerse + 1).map(({ word }) => word).join(' ')}</p>
+          <h1 className='text-2xl'>Words so far:</h1>
+          {currentWordInVerse !== null && <p className='text-xl'>{neil.slice(0, currentWordInVerse + 1).map(({ word }) => word).join(' ')}</p>}
         </div>
-      }
+      
       <div className='restart-button absolute top-0 right-0 p-4 z-[1]'>
-        <button onClick={() => setCurrentWordInVerse(null)} className='bg-white text-black p-2 rounded-md'>Restart</button>
+        <Button onClick={() => setCurrentWordInVerse(null)} variant='secondary'>Restart</Button>
       </div>
       <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 35], fov: 90 }} style={{height: '100vh'}} className='h-full min-h-screen w-full'>
       <fog attach="fog" args={['#202025', 0, 80]} />

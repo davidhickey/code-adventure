@@ -49,7 +49,7 @@ const Header = () => {
           </div>
           <div className="hidden lg:flex lg:gap-x-12">
             {navigation.map((item) => (
-              <a key={item.name} href={item.href} className="text-sm/6 font-semibold text-lPrimaryGreen dark:text-dPrimaryGray hover:text-lSecBurntOrange dark:hover:text-dSecMaize">
+              <a key={item.name} href={item.href} className="text-sm/6 font-semibold text-lPrimaryGreen dark:text-dPrimaryGray hover:text-lSecDarkGreen dark:hover:text-dSecMaize">
                 {item.name}
               </a>
             ))}
@@ -82,7 +82,7 @@ const Header = () => {
               </button>
             </div>
             <div className="mt-6 flow-root">
-              <div className="-my-6 divide-y divide-gray-500/10">
+              <div className="-my-6 divide-y divide-lPrimaryGreen dark:divide-dPrimaryGray">
                 <div className="space-y-2 py-6">
                   {navigation.map((item) => (
                     <a

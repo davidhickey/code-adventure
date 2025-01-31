@@ -14,6 +14,7 @@ export default {
         foreground: "var(--foreground)",
         primaryPurple: "#4F46E5",
         lPrimaryGreen: "#283618", //text
+        lSecDarkGreen: "#151c0c",
         lSecLightGreen: "#606c38",
         lSecCream: "#fefae0", //bg
         lSecPeach: "#dda15e",
