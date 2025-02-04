@@ -1,5 +1,5 @@
 "use client";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import WordGallery from "@/components/sections/WordGallery";
 import Button from "@/components/elements/Button";
 
