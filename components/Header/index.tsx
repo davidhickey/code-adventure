@@ -8,9 +8,9 @@ import Link from 'next/link';
 import ThemeContext from '@/store';
 
 const navigation = [
-  { name: 'Nasa Images', href: '/space-gallery' },
-  { name: 'Lyrics Game', href: '/lyrics-game' },
-  { name: 'Art Gallery', href: '/art-gallery' },
+  { name: 'Nasa Images', href: '/space-gallery', underConstruction: false },
+  { name: 'Lyrics Game', href: '/lyrics-game', underConstruction: false },
+  { name: 'Art Gallery', href: '/art-gallery', underConstruction: true },
 ]
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -49,16 +49,23 @@ const Header = () => {
           </div>
           <div className="hidden lg:flex lg:gap-x-12">
             {navigation.map((item) => (
-              <a key={item.name} href={item.href} className="text-sm/6 font-semibold text-lPrimaryGreen dark:text-dPrimaryGray hover:text-lSecDarkGreen dark:hover:text-dSecMaize">
+              <div key={item.name} className='relative'>
+              <Link href={item.href} className="relative text-sm/6 font-semibold text-lPrimaryGreen dark:text-dPrimaryGray hover:text-lSecDarkGreen dark:hover:text-dSecMaize">
                 {item.name}
-              </a>
+              </Link>
+              {item.underConstruction && <span className="absolute bottom-[-.5rem] left-0 text-[10px] text-red-500 w-[110px]">Under Construction</span>}
+              </div>
             ))}
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
             <button onClick={toggleTheme} className="text-lPrimaryGreen dark:text-dPrimaryGray">{isDarkTheme ? <SunIcon className='size-8 dark:hover:text-dSecMaize dark:hover:fill-dSecMaize'/> : <MoonIcon className='size-8 hover:fill-lPrimaryGreen text-lPrimaryGreen'/>}</button>
           </div>
         </nav>
-        <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
+        <Dialog 
+          open={mobileMenuOpen} 
+          onClose={setMobileMenuOpen}
+          className="lg:hidden"
+        >
           <div className="fixed inset-0 z-50" />
           <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-lSecCream dark:bg-dSecDarkBlue px-6 py-6 sm:max-w-sm ring-1 ring-opacity-40 ring-lPrimaryGreen dark:ring-dPrimaryGray">
             <div className="flex items-center justify-between">
@@ -85,13 +92,15 @@ const Header = () => {
               <div className="-my-6 divide-y divide-lPrimaryGreen dark:divide-dPrimaryGray">
                 <div className="space-y-2 py-6">
                   {navigation.map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-lPrimaryGreen dark:text-dPrimaryGray hover:text-lSecBurntOrange dark:hover:text-dSecMaize"
-                    >
-                      {item.name}
-                    </a>
+                    <div key={item.name} className='relative'>
+                      <Link
+                        href={item.href}
+                        className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-lPrimaryGreen dark:text-dPrimaryGray hover:text-lSecBurntOrange dark:hover:text-dSecMaize"
+                      >
+                        {item.name}
+                      </Link>
+                    {item.underConstruction && <span className="absolute bottom-[0] left-0 text-[10px] text-red-500 w-[110px]">Under Construction</span>}
+                    </div>
                   ))}
                 </div>
                 <div className="py-6">

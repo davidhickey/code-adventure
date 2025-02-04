@@ -39,7 +39,6 @@ const LyricsGame = () => {
       const data = await res.json();
       const lyrics = parseLyrics(data.lyrics);
       setLyrics(lyrics);
-      console.log(lyrics);
     } catch (error) {
       console.error(error);
       setErrMessage("Failed to fetch lyrics. Please make sure there are no spelling mistakes.");
