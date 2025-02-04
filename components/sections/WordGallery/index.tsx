@@ -6,30 +6,7 @@ import { Billboard, Text, TrackballControls } from '@react-three/drei'
 import { generate } from 'random-words';
 import Button from '@/components/elements/Button';
 import ThemeContext from '@/store';
-
-
-
-//create a game that passes in a verse from a song
-//the user needs to click on the words in order to form the song
-//if the user clicks on a word ouf of order the word should turn red
-//if the user clicks on a correct word the word should turn green
-
-// todos:
-//print out correct lyrics below the game - complete
-//add a button to restart the game - complete
-//get song lyrics from an api - Genious API
-//set up Oauth for Genius API
-
-
-const rawNeil = `Look out, Mama, there's a white boat comin' up the river
-With a big red beacon and a flag and a man on the rail
-I think you'd better call John
-'Cause it don't look like they're here to deliver the mail
-And it's less than a mile away, I hope they didn't come to stay
-It's got numbers on the side and a gun, and it's makin' big waves`;
-
-const neil = rawNeil.split(' ').map((word, index) => ({ word, index }));
-
+import { LyricsData } from '@/app/lyrics-game/page';
 
 function Word({ word, id, currentWordInVerse, emitCurrentWord, position, ...props} : {
   word: string,
@@ -57,7 +34,7 @@ function Word({ word, id, currentWordInVerse, emitCurrentWord, position, ...prop
     if (ref.current) {
       const material = Array.isArray(ref.current.material) ? ref.current.material[0] as THREE.MeshBasicMaterial : ref.current.material as THREE.MeshBasicMaterial;
       material.color.lerp(color.set(hovered ? '#fa2720' : isDarkTheme ? '#e5e5e5' : '#606c38' ), 0.1);
-      material.color.lerp(color.set(currentWordInVerse !== null && id <= currentWordInVerse ? '#20CC00' : 'white'), 0.1);
+      material.color.lerp(color.set(currentWordInVerse !== null && id <= currentWordInVerse ? '#20CC00' : '#e5e5e5'), 0.1);
     }
   })
 
@@ -69,11 +46,13 @@ function Word({ word, id, currentWordInVerse, emitCurrentWord, position, ...prop
 }
 
 function Cloud({ 
+  rawLyrics,
   count = 4, 
   radius = 20, 
   currentWordInVerse, 
   emitCurrentWord 
 }: {
+  rawLyrics: { word: string, index: number }[],
   count: number,
   radius: number,
   currentWordInVerse: number | null,
@@ -91,7 +70,7 @@ function Cloud({
     }
 
     const tempWithNeil = temp.map(([pos], index) => {
-      return [pos, neil[index]?.word ?? '']
+      return [pos, rawLyrics[index]?.word ?? '']
     });
 
     return tempWithNeil
@@ -100,8 +79,17 @@ function Cloud({
   return words.map(([pos, word], index) => <Word key={index} word={word as string} id={index} currentWordInVerse={currentWordInVerse} emitCurrentWord={emitCurrentWord} position={pos}/>)
 }
 
-const WordGallery = () => {
-  const [currentWordInVerse, setCurrentWordInVerse] = useState<null | number>(null);
+
+type StructuredLyrics = Lyric[][];
+type RawLyrics = Lyric[];
+type Lyric = {word: string, index: number};
+
+const WordGallery = ({
+  lyrics
+  }: {
+  lyrics:LyricsData
+  }) => {
+  const [currentWordInVerse, setCurrentWordInVerse] = useState<null | number>(5);
 
   const handleUpdateCurrentWord = (id: number) => {
     if (id === 0 && currentWordInVerse === null) {
@@ -109,24 +97,47 @@ const WordGallery = () => {
     } else if (currentWordInVerse !== null && id === currentWordInVerse + 1) {
       setCurrentWordInVerse(id);
     }
-
   }
+
+  const lyricsWithId = (lyrics: LyricsData) => {
+    if (!lyrics) return null;
+    let counter = 0;
+    return lyrics.map((line: string[]) => line.map((word) => ({word, index: counter++})));
+  }
+
+
+  const structuredLyrics: StructuredLyrics | null = lyricsWithId(lyrics);
+  const rawLyrics: RawLyrics | null = structuredLyrics?.flatMap((line:Lyric[]) => line) ?? null;
 
   return (
     <div className='min-h-screen h-full w-full bg-lSecCream dark:bg-dSecDarkBlue text-lPrimaryGreen dark:text-dPrimaryGray rounded-md border border-lPrimaryGreen dark:border-dSecMaize relative'>
         <div className="words-so-far-container absolute top-0 left-0 p-4">
-          <h1 className='text-2xl'>Words so far:</h1>
-          {currentWordInVerse !== null && <p className='text-xl'>{neil.slice(0, currentWordInVerse + 1).map(({ word }) => word).join(' ')}</p>}
+          <h2 className='text-xl font-bold'>Lyrics:</h2>
+          {(currentWordInVerse !== null && structuredLyrics) &&
+            <div>
+              {structuredLyrics.map((line, index) => {
+                return line.some(word => word.index <= currentWordInVerse) &&
+                  <p key={index}>{line.map((word, i) => word.index <= currentWordInVerse && 
+                    <span key={`${index}-${i}`} className={'text-lSecDarkGreen dark:text-dPrimaryGray'}>{word.word} </span>)}</p>
+              })}
+              
+            </div>
+          }
         </div>
+        {(rawLyrics && currentWordInVerse === rawLyrics?.length - 1) && 
+        <div className='absolute top-0 p-4 w-full text-center'>
+          <p className='text-xl font-bold animate-pulse'>Congratulations! You completed the song!</p>
+        </div>
+        }
       
       <div className='restart-button absolute top-0 right-0 p-4 z-[1]'>
         <Button onClick={() => setCurrentWordInVerse(null)} variant='secondary'>Restart</Button>
       </div>
-      <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 35], fov: 90 }} style={{height: '100vh'}} className='h-full min-h-screen w-full'>
-      <fog attach="fog" args={['#202025', 0, 80]} />
+      <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 125], fov: 90 }} style={{height: '100vh'}} className='h-full min-h-screen w-full'>
+      {/* <fog attach="fog" args={['#202025', 0, 100]} /> */}
       <Suspense fallback={null}>
         <group rotation={[10, 10.5, 10]}>
-          <Cloud count={Math.sqrt(neil.length)} radius={20} currentWordInVerse={currentWordInVerse} emitCurrentWord={handleUpdateCurrentWord} />
+          {rawLyrics && <Cloud rawLyrics={rawLyrics} count={Math.sqrt(rawLyrics.length + 10)} radius={rawLyrics.length / 4} currentWordInVerse={currentWordInVerse} emitCurrentWord={handleUpdateCurrentWord} />}
         </group>
       </Suspense>
       <TrackballControls />

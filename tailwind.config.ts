@@ -24,6 +24,7 @@ export default {
         dSecMaize: "#fca311", //accent
         dSecDarkBlue: "#14213d", //bg
         dSecBlack: "#000000",
+        darkGray: "#333333",
 
       },
       fontFamily: {
