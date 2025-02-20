@@ -126,7 +126,8 @@ const WordGallery = ({
     const paginatedLyrics = rawLyrics.slice(startIndex, endIndex);
     const randomizedLyrics = paginatedLyrics.sort(() => Math.random() - 0.5);
     return randomizedLyrics;
-  }, [page, wordsPerPage, rawLyrics.length]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, wordsPerPage, rawLyrics?.length]);
 
   const isLastPage = rawLyrics && paginatedRawLyrics && paginatedRawLyrics?.some(lyric => lyric.index === rawLyrics?.length - 1);
 
