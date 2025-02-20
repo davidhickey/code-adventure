@@ -8,10 +8,10 @@ import Button from '@/components/elements/Button';
 import ThemeContext from '@/store';
 import { LyricsData } from '@/app/lyrics-game/page';
 
-function Word({ word, id, currentWordInVerse, emitCurrentWord, position, ...props} : {
+function Word({ word, id, currentWordInSong, emitCurrentWord, position, ...props} : {
   word: string,
   id: number,
-  currentWordInVerse: number | null,
+  currentWordInSong: number | null,
   emitCurrentWord: (id: number, word: string) => void,
   position: THREE.Vector3 | string | string[];
 }) {
@@ -34,7 +34,7 @@ function Word({ word, id, currentWordInVerse, emitCurrentWord, position, ...prop
     if (ref.current) {
       const material = Array.isArray(ref.current.material) ? ref.current.material[0] as THREE.MeshBasicMaterial : ref.current.material as THREE.MeshBasicMaterial;
       material.color.lerp(color.set(hovered ? '#fa2720' : isDarkTheme ? '#e5e5e5' : '#606c38' ), 0.1);
-      material.color.lerp(color.set(currentWordInVerse !== null && id <= currentWordInVerse ? '#20CC00' : '#e5e5e5'), 0.1);
+      material.color.lerp(color.set(currentWordInSong !== null && id <= currentWordInSong ? '#20CC00' : '#e5e5e5'), 0.1);
     }
   })
 
@@ -46,37 +46,42 @@ function Word({ word, id, currentWordInVerse, emitCurrentWord, position, ...prop
 }
 
 function Cloud({ 
-  rawLyrics,
+  lyrics,
   count = 4, 
   radius = 20, 
-  currentWordInVerse, 
+  currentWordInSong, 
   emitCurrentWord 
 }: {
-  rawLyrics: { word: string, index: number }[],
+  lyrics: { word: string, index: number }[],
   count: number,
   radius: number,
-  currentWordInVerse: number | null,
+  currentWordInSong: number | null,
   emitCurrentWord: (id: number, word: string) => void
 }) {
+
+
+
+
   const words = useMemo(() => {
-    const temp = []
+    const temp: [THREE.Vector3, string][] = []
     const spherical = new THREE.Spherical()
     const phiSpan = Math.PI / (Math.ceil(count))
     const thetaSpan = (Math.PI * 2) / Math.ceil(count);
     for (let i = 1; i < count + 1; i++) {
       for (let j = 0; j < count; j++) { 
-      temp.push([new THREE.Vector3().setFromSpherical(spherical.set(radius, phiSpan * i, thetaSpan * j)), generate()])
+      temp.push([new THREE.Vector3().setFromSpherical(spherical.set(radius, phiSpan * i, thetaSpan * j)), generate() as string])
       }
     }
 
-    const tempWithNeil = temp.map(([pos], index) => {
-      return [pos, rawLyrics[index]?.word ?? '']
+    const tempWithNeil: [THREE.Vector3, { word: string; id: number }][] = temp.map(([pos], index) => {
+      return [pos, {word: lyrics[index]?.word ?? '', id: lyrics[index]?.index ?? 0}]
     });
+    const words = tempWithNeil.filter(([, lyric]) => lyric.word !== '');
 
-    return tempWithNeil
-  }, [count, radius]);
+    return words;
+  }, [count, radius, lyrics]);
 
-  return words.map(([pos, word], index) => <Word key={index} word={word as string} id={index} currentWordInVerse={currentWordInVerse} emitCurrentWord={emitCurrentWord} position={pos}/>)
+  return words.map(([pos, lyric], index) => <Word key={index} word={lyric.word as string} id={lyric.id} currentWordInSong={currentWordInSong} emitCurrentWord={emitCurrentWord} position={pos}/>);
 }
 
 
@@ -89,13 +94,19 @@ const WordGallery = ({
   }: {
   lyrics:LyricsData
   }) => {
-  const [currentWordInVerse, setCurrentWordInVerse] = useState<null | number>(5);
+  const [currentWordInSong, setcurrentWordInSong] = useState<number>(5);
+  const [page, setPage] = useState<number>(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [wordsPerPage, setWordsPerPage] = useState<number>(25);
 
   const handleUpdateCurrentWord = (id: number) => {
-    if (id === 0 && currentWordInVerse === null) {
-      setCurrentWordInVerse(0);
-    } else if (currentWordInVerse !== null && id === currentWordInVerse + 1) {
-      setCurrentWordInVerse(id);
+   if (currentWordInSong !== null && id === currentWordInSong + 1) {
+      setcurrentWordInSong(id);
+    }
+
+    //condition for when the user reaches the end of the page, we automatically goes to the next page
+    if (id === currentWordInSong + 1 && id === ((page + 1) * wordsPerPage) - 1 && !isLastPage) {
+      setPage(page + 1);
     }
   }
 
@@ -108,36 +119,54 @@ const WordGallery = ({
 
   const structuredLyrics: StructuredLyrics | null = lyricsWithId(lyrics);
   const rawLyrics: RawLyrics | null = structuredLyrics?.flatMap((line:Lyric[]) => line) ?? null;
+  const paginatedRawLyrics = useMemo(() => {
+    if (!rawLyrics) return null;
+    const startIndex = page * wordsPerPage;
+    const endIndex = startIndex + wordsPerPage;
+    const paginatedLyrics = rawLyrics.slice(startIndex, endIndex);
+    const randomizedLyrics = paginatedLyrics.sort(() => Math.random() - 0.5);
+    return randomizedLyrics;
+  }, [page, wordsPerPage, rawLyrics.length]);
+
+  const isLastPage = rawLyrics && paginatedRawLyrics && paginatedRawLyrics?.some(lyric => lyric.index === rawLyrics?.length - 1);
+
+  if (!rawLyrics) return <div>Loading...</div>;
+  if (rawLyrics.length === 0) return <div>No lyrics found.</div>;
 
   return (
     <div className='min-h-screen h-full w-full bg-lSecCream dark:bg-dSecDarkBlue text-lPrimaryGreen dark:text-dPrimaryGray rounded-md border border-lPrimaryGreen dark:border-dSecMaize relative'>
         <div className="words-so-far-container absolute top-0 left-0 p-4">
-          <h2 className='text-xl font-bold'>Lyrics:</h2>
-          {(currentWordInVerse !== null && structuredLyrics) &&
+          <h2 className='text-xl font-bold'>Lyrics: {currentWordInSong + 1}/{rawLyrics?.length}</h2>
+          {(currentWordInSong !== null && structuredLyrics) &&
             <div>
               {structuredLyrics.map((line, index) => {
-                return line.some(word => word.index <= currentWordInVerse) &&
-                  <p key={index}>{line.map((word, i) => word.index <= currentWordInVerse && 
+                return line.some(word => word.index <= currentWordInSong) &&
+                  <p key={index}>{line.map((word, i) => word.index <= currentWordInSong && 
                     <span key={`${index}-${i}`} className={'text-lSecDarkGreen dark:text-dPrimaryGray'}>{word.word} </span>)}</p>
               })}
               
             </div>
           }
         </div>
-        {(rawLyrics && currentWordInVerse === rawLyrics?.length - 1) && 
-        <div className='absolute top-0 p-4 w-full text-center'>
-          <p className='text-xl font-bold animate-pulse'>Congratulations! You completed the song!</p>
-        </div>
+        {(isLastPage && currentWordInSong === Math.max(...paginatedRawLyrics.map(lyric => lyric.index))) && 
+          <div className='absolute top-0 p-4 w-full text-center z-[1]'>
+            <p className='text-xl font-bold animate-pulse'>Congratulations! You found all the lyrics.</p>
+          </div>
+        }
+        {(!isLastPage && paginatedRawLyrics && currentWordInSong + 1 === Math.min(...paginatedRawLyrics.map(lyric => lyric.index))) && 
+          <div className='absolute top-0 p-4 w-full text-center z-[1]'>
+            <p className='text-xl font-bold animate-pulse'>You found all the lyrics so far! Can you find some more?</p>
+          </div>
         }
       
       <div className='restart-button absolute top-0 right-0 p-4 z-[1]'>
-        <Button onClick={() => setCurrentWordInVerse(null)} variant='secondary'>Restart</Button>
+        <Button onClick={() => {setcurrentWordInSong(0); setPage(0)}} variant='secondary'>Restart</Button>
       </div>
       <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 125], fov: 90 }} style={{height: '100vh'}} className='h-full min-h-screen w-full'>
       {/* <fog attach="fog" args={['#202025', 0, 100]} /> */}
       <Suspense fallback={null}>
         <group rotation={[10, 10.5, 10]}>
-          {rawLyrics && <Cloud rawLyrics={rawLyrics} count={Math.sqrt(rawLyrics.length + 10)} radius={rawLyrics.length / 4} currentWordInVerse={currentWordInVerse} emitCurrentWord={handleUpdateCurrentWord} />}
+          {paginatedRawLyrics && <Cloud lyrics={paginatedRawLyrics} count={Math.sqrt(paginatedRawLyrics.length + 1)} radius={paginatedRawLyrics.length} currentWordInSong={currentWordInSong} emitCurrentWord={handleUpdateCurrentWord} />}
         </group>
       </Suspense>
       <TrackballControls />
