@@ -17,6 +17,7 @@ export const transformNasaImagesToPhotoAlbum = (nasaImages: ApodData[]): ImageGa
   return justImages.map((image) => {
     return {
       src: image.url,
+      hdUrl: image.hdurl,
       alt: image.title,
       width: 400,
       height: 400,
