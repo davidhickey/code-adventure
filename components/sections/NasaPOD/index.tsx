@@ -4,6 +4,7 @@ import Button from "@/components/elements/Button";
 import { fetchApodData } from "@/lib/apis/nasa";
 const NasaPOD = async () => {
   const apodData = await fetchApodData();
+  console.log(apodData);
   if (!apodData) {
     console.error("Failed to fetch APOD data and render it.");
     return null;
@@ -11,9 +12,10 @@ const NasaPOD = async () => {
   return (
     <div className="mx-auto max-w-2xl pb-8">
       <div className="text-center">
-        <h1 className="text-balance text-3xl font-semibold tracking-tight text-lPrimaryGreen dark:text-dPrimaryGray">
+        <h1 className="text-balance text-3xl font-semibold tracking-tight text-lPrimaryGreen dark:text-dPrimaryGray pb-4">
           NASA Astronomy Picture of the Day
         </h1>
+        <h2 className="text-xl font-semibold tracking-tight">{new Date(apodData.date).toLocaleDateString("en-us", {timeZone: "utc", year: "numeric", month: "long", day: "numeric", weekday: "long"})}</h2>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-4 relative">
           <Image
             alt=""
