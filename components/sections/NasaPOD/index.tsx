@@ -3,7 +3,7 @@ import Link from "next/link";
 import Button from "@/components/elements/Button";
 import { fetchApodData } from "@/lib/apis/nasa";
 const NasaPOD = async () => {
-  const apodData = await fetchApodData();
+  const apodData = await fetchApodData({ noCache: true });
   if (!apodData) {
     console.error("Failed to fetch APOD data and render it.");
     return null;

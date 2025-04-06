@@ -1,17 +1,18 @@
 import { ApodData } from "@/lib/apis/nasa";
 import { ImageGalleryItem } from "@/components/sections/ImageGallery";
 import Image from "next/image";
-import {
-  RenderImageContext,
-  RenderImageProps,
-} from "react-photo-album";
+import { RenderImageContext, RenderImageProps } from "react-photo-album";
 import { fetchApodData } from "@/lib/apis/nasa";
 
-export const fetchMoreApodData = async (): Promise<ImageGalleryItem[] | null> => {
-  return transformNasaImagesToPhotoAlbum(await fetchApodData(20));
-}
+export const fetchMoreApodData = async (): Promise<
+  ImageGalleryItem[] | null
+> => {
+  return transformNasaImagesToPhotoAlbum(await fetchApodData({ count: 20 }));
+};
 
-export const transformNasaImagesToPhotoAlbum = (nasaImages: ApodData[]): ImageGalleryItem[] => {
+export const transformNasaImagesToPhotoAlbum = (
+  nasaImages: ApodData[]
+): ImageGalleryItem[] => {
   //filter out non image types
   const justImages = nasaImages.filter((image) => image.media_type === "image");
   return justImages.map((image) => {
@@ -24,20 +25,20 @@ export const transformNasaImagesToPhotoAlbum = (nasaImages: ApodData[]): ImageGa
       date: image.date,
       description: image.explanation,
       title: image.title,
-    }
+    };
   });
-}
+};
 
 export const renderNextImage = (
   { alt = "", title, sizes }: RenderImageProps,
-  { photo, width, height }: RenderImageContext,
+  { photo, width, height }: RenderImageContext
 ) => {
   return (
     <div
       style={{
         width: "100%",
         position: "relative",
-        height:"100%",
+        height: "100%",
         aspectRatio: `${width} / ${height}`,
       }}
     >
@@ -52,4 +53,4 @@ export const renderNextImage = (
       />
     </div>
   );
-}
+};

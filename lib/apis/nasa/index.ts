@@ -9,12 +9,16 @@ export type ApodData = {
   thumbnail_url?: string;
 };
 
-export async function fetchApodData(
-  count?: number
-): Promise<ApodData & ApodData[]> {
+export async function fetchApodData({
+  count,
+  noCache,
+}: {
+  count?: number;
+  noCache?: boolean;
+}): Promise<ApodData & ApodData[]> {
   const url = new URL(`${process.env.NEXT_PUBLIC_BASE_URL}/api/nasa/apod`);
   if (count) url.searchParams.append("count", count.toString());
-
+  if (noCache) url.searchParams.append("noCache", "true");
   const response = await fetch(url.toString());
 
   if (!response.ok) {
