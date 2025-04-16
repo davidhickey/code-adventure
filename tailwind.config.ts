@@ -25,6 +25,7 @@ export default {
         dSecDarkBlue: "#14213d", //bg
         dSecBlack: "#000000",
         darkGray: "#333333",
+        darkYellow: "#fca311",
 
       },
       fontFamily: {
