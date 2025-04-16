@@ -3,7 +3,7 @@ import WordleMain from "@/components/features/wordle/WordleMain";
 const getWordleAnswer = async () => {
   try {
     const res = await fetch(" https://wordle-api-kappa.vercel.app/answer", {
-      cache: "no-store",
+      next: { revalidate: 3600 },
     });
     const data = await res.json();
     return data;

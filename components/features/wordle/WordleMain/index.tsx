@@ -37,8 +37,10 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = (e?: React.FormEvent<HTMLFormElement>) => {
+    if (e) {
+      e.preventDefault();
+    }
     if (boardForm[guessCount].some((cell) => cell === "")) {
       setMessage("Please submit a valid guess.");
       return;
@@ -235,7 +237,7 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
                         ? "gray"
                         : "",
                 }}
-                onClick={(e) => {
+                onClick={() => {
                   if (letter !== "Backspace" && letter !== "Enter") {
                     handleChange(
                       guessCount,
@@ -252,7 +254,7 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
                       ""
                     );
                   } else if (letter === "Enter") {
-                    handleSubmit(e);
+                    handleSubmit();
                   }
                 }}
                 disabled={
