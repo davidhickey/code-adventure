@@ -1,7 +1,7 @@
 import { groq } from "next-sanity";
 import client from "./sanity.client";
 
-export const sanityFetch =  ({query, params}: {query: string, params?: any}) => {
+export const sanityFetch =  ({query, params}: {query: string, params?: Record<string, string>}) => {
   return client.fetch(query, params);
 }
 
