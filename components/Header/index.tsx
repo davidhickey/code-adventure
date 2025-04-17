@@ -1,7 +1,7 @@
 "use client";
 
-import { useContext, useState } from "react";
-import { Dialog, DialogPanel } from "@headlessui/react";
+import { useContext, useState, Fragment } from "react";
+import { Dialog, DialogPanel, Transition, TransitionChild } from "@headlessui/react";
 import {
   Bars3Icon,
   XMarkIcon,
@@ -31,7 +31,7 @@ const Header = () => {
         aria-label="Global"
         className="flex items-center justify-between p-6 lg:px-8"
       >
-        <div className="flex lg:flex-1">
+        <div className="flex lg:flex-1 items-center">
           <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
             <Image
@@ -84,15 +84,21 @@ const Header = () => {
           </button>
         </div>
       </nav>
-      <Dialog
-        open={mobileMenuOpen}
-        onClose={setMobileMenuOpen}
+      <Transition appear="true" show={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)}>
+        <Dialog
         className="lg:hidden"
       >
         <div className="fixed inset-0 z-50" />
-        <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-lSecCream dark:bg-dSecDarkBlue px-6 py-6 sm:max-w-sm ring-1 ring-opacity-40 ring-lPrimaryGreen dark:ring-dPrimaryGray">
+        <TransitionChild enter="transition duration-300 ease-in data-[closed]:opacity-0" enterFrom="opacity-0" enterTo="opacity-100" leave="transition duration-300 ease-in data-[closed]:opacity-0" leaveFrom="opacity-100" leaveTo="opacity-0">
+        <DialogPanel
+            className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-lSecCream dark:bg-dSecDarkBlue px-6 py-6 sm:max-w-sm ring-1 ring-opacity-40 ring-lPrimaryGreen dark:ring-dPrimaryGray"
+          >
           <div className="flex items-center justify-between">
-            <Link href="/" onClick={() => setMobileMenuOpen(false)} className="-m-1.5 p-1.5">
+            <Link
+              href="/"
+              onClick={() => setMobileMenuOpen(false)}
+              className="-m-1.5 p-1.5"
+            >
               <Image
                 alt=""
                 src={isDarkTheme ? "/DH-gray.png" : "/DH-green.png"}
@@ -147,9 +153,11 @@ const Header = () => {
                 </button>
               </div>
             </div>
-          </div>
-        </DialogPanel>
-      </Dialog>
+            </div>
+          </DialogPanel>
+          </TransitionChild>
+        </Dialog>
+      </Transition>
     </header>
   );
 };
