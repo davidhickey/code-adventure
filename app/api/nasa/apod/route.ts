@@ -12,6 +12,7 @@ export async function GET(req:NextRequest): Promise<Response> {
 
     const searchParams = new URLSearchParams(req.nextUrl.searchParams);
     const count = searchParams.get('count');
+    const noCache = searchParams.get('noCache');
     if (count) {
       url.searchParams.append('count', count);
     }
@@ -19,7 +20,12 @@ export async function GET(req:NextRequest): Promise<Response> {
     url.searchParams.append('thumbs', 'true');
 
     // Fetch data from NASA's API
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      cache: noCache ? 'no-store' : 'default',
+    });
 
     if (!response.ok) {
       throw new Error(`Failed to fetch APOD data in route.ts: ${response.statusText}`);
