@@ -49,7 +49,7 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
     setGuessResults((prevResults) => [...prevResults, result]);
     if (result.every((letter) => letter.status === "correct")) {
       setMessage("You win!");
-    } else if (guessCount < 1) {
+    } else if (guessCount === 5) {
       setMessage("You lose!");
     }
   };
