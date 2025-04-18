@@ -2,7 +2,7 @@
 
 import Button from "@/components/elements/Button";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
   const [boardForm, setBoardForm] = useState(
@@ -26,6 +26,7 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
     ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
     ["Enter", "Z", "X", "C", "V", "B", "N", "M", "Backspace"],
   ];
+  const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
   const handleChange = (rowIndex: number, cellIndex: number, value: string) => {
     setBoardForm((prevBoard) =>
@@ -100,6 +101,35 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
     return result;
   };
 
+  const handleKeyDown = (e: KeyboardEvent) => {
+    const key = e.key.toUpperCase();
+    if (ALPHABET.includes(key)) {
+      handleChange(
+        guessCount,
+        boardForm[guessCount].filter((cell) => !!cell).length,
+        key
+      );
+    } else if (key === "BACKSPACE") {
+      handleChange(
+        guessCount,
+        boardForm[guessCount].filter((cell) => !!cell).length
+          ? boardForm[guessCount].filter((cell) => !!cell)
+              .length - 1
+          : 0,
+        ""
+      );
+    } else if (key === "ENTER") {
+      handleSubmit();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleKeyDown]);
+
   return (
     <div className="wordle-main-container relative flex flex-col items-center justify-center h-full w-full bg-lSecCream dark:bg-dSecDarkBlue text-lPrimaryGreen dark:text-dPrimaryGray">
       <div className="flex flex-col items-center justify-center p-4">
@@ -154,7 +184,7 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
                       e.target.value.toUpperCase()
                     )
                   }
-                  disabled={rowIndex < guessCount || rowIndex > guessCount}
+                  disabled={true}
                   style={{
                     backgroundColor:
                       guessResults[rowIndex] &&
@@ -258,8 +288,10 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
                   }
                 }}
                 disabled={
-                  letter === "Enter" &&
-                  boardForm[guessCount].filter((cell) => !!cell).length !== 5
+                  (letter === "Enter" &&
+                  boardForm[guessCount].filter((cell) => !!cell).length !== 5) ||
+                  (letter === "Backspace" &&
+                  boardForm[guessCount].filter((cell) => !!cell).length === 0)
                 }
               >
                 {letter}
