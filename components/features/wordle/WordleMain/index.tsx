@@ -3,6 +3,7 @@
 import Button from "@/components/elements/Button";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { BackspaceIcon } from "@heroicons/react/24/outline";
 
 const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
   const [boardForm, setBoardForm] = useState(
@@ -133,7 +134,7 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
 
 
   return (
-    <div className="wordle-main-container relative flex flex-col items-center justify-center h-full w-full bg-lSecCream dark:bg-dSecDarkBlue text-lPrimaryGreen dark:text-dPrimaryGray">
+    <div className="wordle-main-container relative flex flex-col items-center justify-center h-[calc(100vh-72px)] lg:h-[calc(100vh-80px)] w-full bg-lSecCream dark:bg-dSecDarkBlue text-lPrimaryGreen dark:text-dPrimaryGray">
       <div className="flex flex-col items-center justify-center p-4">
         <h1 className="text-3xl sm:text-5xl pb-4 text-center">Wordle</h1>
         <p className="text-center text-sm">
@@ -152,7 +153,7 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
       </div>
 
       {message && message === "You win!" && (
-        <div className="message-behind absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center">
+        <div className="message-behind absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center sm:justify-start">
           <h1 className="text-[20vw] pb-4 text-center transition-all duration-300 ease-in-out animate-pulse">
             You win!
           </h1>
@@ -232,24 +233,24 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
           </div>
         )}
       </div>
-      <div className="keyboard-container flex flex-col items-center justify-center">
+      <div className="keyboard-container flex flex-col items-center justify-start h-48 gap-1 pb-4">
         {keyboard.map((row, rowIndex) => (
           <div
             key={rowIndex}
-            className="keyboard-row flex flex-row items-center justify-center"
+            className="keyboard-row flex flex-row items-center justify-center h-full"
           >
             {row.map((letter, letterIndex) => (
               <Button
                 variant="custom"
                 key={letterIndex}
-                className={`w-4 h-4 px-0 sm:w-6 sm:h-6 py-1 sm:px-1 m-[2px] text-sm border bg-white dark:bg-dSecDarkBlue text-lPrimaryGreen dark:text-dPrimaryGray border-lPrimaryGreen dark:border-dSecMaize rounded-md justify-center items-center flex`}
+                className={`w-4 h-full m-[2px] text-sm border bg-white dark:bg-dSecDarkBlue text-lPrimaryGreen dark:text-dPrimaryGray border-lPrimaryGreen dark:border-dSecMaize rounded-md justify-center items-center flex`}
                 style={{
                   width:
                     letter === "Enter"
                       ? "44px"
                       : letter === "Backspace"
-                        ? "84px"
-                        : "",
+                        ? "44px"
+                        : "32px",
                   backgroundColor: keyboardGuesses.some(
                     (guess) =>
                       guess.letter === letter && guess.status === "correct"
@@ -296,7 +297,7 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
                   boardForm[guessCount].filter((cell) => !!cell).length === 0)
                 }
               >
-                {letter}
+                {letter === "Backspace" ? <BackspaceIcon className="size-6" /> : letter}
               </Button>
             ))}
           </div>

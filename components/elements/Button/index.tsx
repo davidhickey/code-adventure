@@ -17,15 +17,15 @@ const Button = ({
 }) => {
   const buttonVariant =
     variant === "primary"
-      ? "bg-lPrimaryGreen text-lSecCream  border border-lPrimaryGreen hover:bg-lSecBurntOrange dark:text-dSecDarkBlue dark:border-dSecDarkBlue dark:bg-dPrimaryGray dark:hover:bg-dSecMaize"
+      ? "py-2 px-4 bg-lPrimaryGreen text-lSecCream border border-lPrimaryGreen hover:bg-lSecBurntOrange dark:text-dSecDarkBlue dark:border-dSecDarkBlue dark:bg-dPrimaryGray dark:hover:bg-dSecMaize"
       : variant === "secondary"
-        ? "bg-lsecCream text-lPrimaryGreen border border-lPrimaryGreen hover:bg-lPrimaryGreen hover:border-lPrimaryGreen hover:text-lSecCream dark:border-dPrimaryGray dark:text-dPrimaryGray dark:bg-dSecDarkBlue dark:hover:bg-dPrimaryGray dark:hover:border-dPrimaryGray dark:hover:text-dSecDarkBlue"
-        : variant === "custom" ? "" : "bg-white dark:bg-dSecDarkBlue text-lPrimaryGreen dark:text-dPrimaryGray border border-lPrimaryGreen dark:border-dSecMaize";
+        ? "py-2 px-4 bg-lsecCream text-lPrimaryGreen border border-lPrimaryGreen hover:bg-lPrimaryGreen hover:border-lPrimaryGreen hover:text-lSecCream dark:border-dPrimaryGray dark:text-dPrimaryGray dark:bg-dSecDarkBlue dark:hover:bg-dPrimaryGray dark:hover:border-dPrimaryGray dark:hover:text-dSecDarkBlue"
+        : variant === "custom" ? "" : "py-2 px-4 bg-white dark:bg-dSecDarkBlue text-lPrimaryGreen dark:text-dPrimaryGray border border-lPrimaryGreen dark:border-dSecMaize";
 
   return (
     <button
       onClick={onClick}
-      className={`${buttonVariant} cursor-pointer disabled:cursor-not-allowed font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out ${className}`}
+      className={`${buttonVariant} cursor-pointer disabled:cursor-not-allowed font-bold rounded transition-all duration-300 ease-in-out ${className}`}
       type={type}
       disabled={disabled}
       style={style}
