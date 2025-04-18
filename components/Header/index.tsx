@@ -16,6 +16,7 @@ const navigation = [
   { name: "Nasa Images", href: "/space-gallery", underConstruction: false },
   { name: "Lyrics Game", href: "/lyrics-game", underConstruction: false },
   { name: "Art Gallery", href: "/art-gallery", underConstruction: true },
+  { name: "Wordle", href: "/wordle", underConstruction: false },
 ];
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
