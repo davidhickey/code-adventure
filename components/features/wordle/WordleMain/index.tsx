@@ -29,6 +29,7 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
   const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
   const handleChange = (rowIndex: number, cellIndex: number, value: string) => {
+    setMessage("");
     setBoardForm((prevBoard) =>
       prevBoard.map((row, rI) =>
         rI === rowIndex
@@ -130,6 +131,7 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
     };
   }, [handleKeyDown]);
 
+
   return (
     <div className="wordle-main-container relative flex flex-col items-center justify-center h-full w-full bg-lSecCream dark:bg-dSecDarkBlue text-lPrimaryGreen dark:text-dPrimaryGray">
       <div className="flex flex-col items-center justify-center p-4">
@@ -196,7 +198,7 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
                           ? "#fca311"
                           : rowIndex < guessCount
                             ? "gray"
-                            : "",
+                            : "white",
                   }}
                 />
               ))}
