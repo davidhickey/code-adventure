@@ -1,5 +1,4 @@
 import WordleMain from "@/components/features/wordle/WordleMain";
-
 const getWordleAnswer = async () => {
   try {
     const res = await fetch(" https://wordle-api-kappa.vercel.app/answer", {

@@ -5,67 +5,51 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { BackspaceIcon } from "@heroicons/react/24/outline";
 
+const WORD_LENGTH = 5;
+const MAX_GUESSES = 6;
+const keyboard = [
+  ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+  ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
+  ["Enter", "Z", "X", "C", "V", "B", "N", "M", "Backspace"],
+];
+
+type LetterStatus = "correct" | "present" | "absent";
+type EvaluatedGuess = {
+  letter: string;
+  status: LetterStatus;
+}[];
+const letterBgColor = (status?: LetterStatus) => {
+  switch (status) {
+    case "correct":
+      return "green";
+    case "present":
+      return "yellow";
+    case "absent":
+      return "gray";
+    default:
+      return "white";
+  }
+};
+
 const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
-  const [boardForm, setBoardForm] = useState(
-    Array(6)
-      .fill(null)
-      .map(() => Array(5).fill(""))
-  );
-  const [guessResults, setGuessResults] = useState<
-    { letter: string; status: string }[][]
-  >([]);
-  const [message, setMessage] = useState("");
+  const [currentGuess, setCurrentGuess] = useState<string>("");
+  const [guesses, setGuesses] = useState<EvaluatedGuess[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [isGameOver, setIsGameOver] = useState<boolean>(false);
+  const [isGameWon, setIsGameWon] = useState<boolean>(false);
 
-  const guessCount = guessResults.length;
-  const keyboardGuesses = guessResults.flat();
+  const targetWord = wordleAnswer.toUpperCase();
 
-  const WORDLE_ANSWER = wordleAnswer;
-  const WORDLE_ANSWER_ARR = WORDLE_ANSWER.split("");
-
-  const keyboard = [
-    ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
-    ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
-    ["Enter", "Z", "X", "C", "V", "B", "N", "M", "Backspace"],
-  ];
-  const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-  const handleChange = (rowIndex: number, cellIndex: number, value: string) => {
-    setMessage("");
-    setBoardForm((prevBoard) =>
-      prevBoard.map((row, rI) =>
-        rI === rowIndex
-          ? row.map((cell, cI) => (cI === cellIndex ? value : cell))
-          : row
-      )
-    );
-  };
-
-  const handleSubmit = (e?: React.FormEvent<HTMLFormElement>) => {
-    if (e) {
-      e.preventDefault();
-    }
-    if (boardForm[guessCount].some((cell) => cell === "")) {
-      setMessage("Please submit a valid guess.");
-      return;
-    }
-    const result = checkGuess(boardForm[guessCount]);
-    setGuessResults((prevResults) => [...prevResults, result]);
-    if (result.every((letter) => letter.status === "correct")) {
-      setMessage("You win!");
-    } else if (guessCount === 5) {
-      setMessage("You lose!");
-    }
-  };
-
-  const checkGuess = (curGuess: string[]) => {
-    // Initialize result array
-    const result = Array(5).fill({
+  const evaluatedGuess = (guess: string): EvaluatedGuess => {
+    const result = Array(WORD_LENGTH).fill({
       letter: "",
       status: "absent",
     });
+    const currentGuessArr = guess.split("");
+    const targetWordArr = targetWord.split("");
 
     // Create a map to track remaining letters in the answer
-    const remainingLetters = WORDLE_ANSWER_ARR.reduce(
+    const remainingLetters = targetWordArr.reduce(
       (acc: { [key: string]: number }, letter) => {
         acc[letter] = (acc[letter] || 0) + 1;
         return acc;
@@ -74,8 +58,8 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
     );
 
     // First pass: Mark correct letters
-    curGuess.forEach((letter, index) => {
-      if (letter === WORDLE_ANSWER_ARR[index]) {
+    currentGuessArr.forEach((letter, index) => {
+      if (letter === targetWordArr[index]) {
         result[index] = {
           letter: letter,
           status: "correct",
@@ -90,7 +74,7 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
     });
 
     // Second pass: Mark present letters
-    curGuess.forEach((letter, index) => {
+    currentGuessArr.forEach((letter, index) => {
       if (result[index].status !== "correct" && remainingLetters[letter] > 0) {
         result[index] = {
           letter: letter,
@@ -104,24 +88,30 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
   };
 
   const handleKeyDown = (e: KeyboardEvent) => {
-    const key = e.key.toUpperCase();
-    if (ALPHABET.includes(key)) {
-      handleChange(
-        guessCount,
-        boardForm[guessCount].filter((cell) => !!cell).length,
-        key
-      );
-    } else if (key === "BACKSPACE") {
-      handleChange(
-        guessCount,
-        boardForm[guessCount].filter((cell) => !!cell).length
-          ? boardForm[guessCount].filter((cell) => !!cell)
-              .length - 1
-          : 0,
-        ""
-      );
-    } else if (key === "ENTER") {
-      handleSubmit();
+    if (isGameOver) return;
+    setErrorMessage("");
+
+    if (e.key === "Enter") {
+      if (currentGuess.length !== WORD_LENGTH) {
+        setErrorMessage("Please submit a valid guess.");
+        return;
+      }
+
+      const upperGuess = currentGuess.toUpperCase();
+      const newGuesses = [...guesses, evaluatedGuess(upperGuess)];
+      setGuesses(newGuesses);
+      setCurrentGuess("");
+
+      if (upperGuess === targetWord) {
+        setIsGameWon(true);
+        setIsGameOver(true);
+      } else if (newGuesses.length === MAX_GUESSES) {
+        setIsGameOver(true);
+      }
+    } else if (e.key === "Backspace") {
+      setCurrentGuess(currentGuess.slice(0, -1));
+    } else if (/^[a-zA-Z]$/.test(e.key) && currentGuess.length < WORD_LENGTH) {
+      setCurrentGuess(currentGuess + e.key.toUpperCase());
     }
   };
 
@@ -132,11 +122,12 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
     };
   }, [handleKeyDown]);
 
-
   return (
-    <div className="wordle-main-container relative flex flex-col items-center justify-center h-[calc(100vh-72px)] lg:h-[calc(100vh-80px)] w-full bg-lSecCream dark:bg-dSecDarkBlue text-lPrimaryGreen dark:text-dPrimaryGray">
-      <div className="flex flex-col items-center justify-center p-4">
-        <h1 className="text-3xl sm:text-5xl pb-4 text-center">Wordle</h1>
+    <div className="wordle-main-container relative flex flex-col justify-self-center items-center max-h-[calc(100vh-141px)] lg:max-h-[calc(100vh-149px)] justify-center w-full bg-lSecCream dark:bg-dSecDarkBlue text-lPrimaryGreen dark:text-dPrimaryGray">
+      <div className="flex flex-col items-center justify-center pb-4 sm:pb-10">
+        <h1 className="text-3xl sm:text-5xl text-center sm:pt-4 sm:px-4">
+          Wordle
+        </h1>
         <p className="text-center text-sm">
           Based off of the{" "}
           <Link
@@ -152,88 +143,90 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
         </p>
       </div>
 
-      {message && message === "You win!" && (
+      {isGameWon && (
         <div className="message-behind absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center sm:justify-start">
           <h1 className="text-[20vw] pb-4 text-center transition-all duration-300 ease-in-out animate-pulse">
             You win!
           </h1>
         </div>
       )}
-      <form
-        onSubmit={handleSubmit}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            handleSubmit(e);
-          }
-        }}
-      >
-        <div className="board-container flex flex-col items-center justify-center">
-          {boardForm.map((row, rowIndex) => (
+
+      <div className="board-container flex flex-col items-center justify-center">
+        {Array.from({ length: MAX_GUESSES }).map((_, index) =>
+          index === guesses.length ? (
             <div
-              key={rowIndex}
-              className="row flex flex-row items-center justify-center"
+              data-key={index}
+              key={index}
+              className="board-row current-guess-row flex flex-row items-center justify-center"
             >
-              {row.map((cell, cellIndex) => (
-                <input
-                  key={cellIndex}
-                  type="text"
-                  maxLength={1}
-                  className="cell w-10 h-10 text-center uppercase text-2xl border text-lPrimaryGreen dark:text-dSecDarkBlue border-lPrimaryGreen dark:border-dSecMaize rounded-md p-2 m-1"
-                  value={boardForm[rowIndex][cellIndex]}
-                  onChange={(e) =>
-                    handleChange(
-                      rowIndex,
-                      cellIndex,
-                      e.target.value.toUpperCase()
-                    )
-                  }
-                  disabled={true}
-                  style={{
-                    backgroundColor:
-                      guessResults[rowIndex] &&
-                      guessResults[rowIndex][cellIndex].status === "correct"
-                        ? "green"
-                        : guessResults[rowIndex] &&
-                            guessResults[rowIndex][cellIndex].status ===
-                              "present"
-                          ? "#fca311"
-                          : rowIndex < guessCount
-                            ? "gray"
-                            : "white",
-                  }}
-                />
+              {Array.from({ length: WORD_LENGTH }).map((_, letterIndex) => (
+                <div
+                  key={letterIndex}
+                  className="board-cell w-10 h-10 text-center uppercase leading-6 text-2xl border text-lPrimaryGreen dark:text-dSecDarkBlue border-lPrimaryGreen dark:border-dSecMaize rounded-md p-2 mt-1 mx-[2px]"
+                  style={{ backgroundColor: letterBgColor() }}
+                >
+                  {currentGuess[letterIndex]}
+                </div>
               ))}
             </div>
-          ))}
-        </div>
-      </form>
-      <div className="h-[52px]">
-        {message && message === "Please submit a valid guess." && (
-          <p className="text-center text-sm p-4 animate-pulse">{message}</p>
+          ) : (
+            <div
+              key={index}
+              className="board-row flex flex-row items-center justify-center"
+              data-key={index}
+            >
+              {Array.from({ length: WORD_LENGTH }).map((_, letterIndex) => (
+                <div
+                  key={letterIndex}
+                  className="board-cell w-10 h-10 text-center uppercase leading-6 text-2xl border text-lPrimaryGreen dark:text-dSecDarkBlue border-lPrimaryGreen dark:border-dSecMaize rounded-md p-2 mt-1 mx-[2px]"
+                  style={{
+                    backgroundColor: letterBgColor(
+                      guesses[index]?.[letterIndex]?.status
+                    ),
+                  }}
+                >
+                  {guesses[index]?.[letterIndex]?.letter}
+                </div>
+              ))}
+            </div>
+          )
         )}
-        {message && message === "You win!" && (
-          <p className="text-center text-sm p-4 animate-pulse">
+      </div>
+
+      <div className="h-[32px] sm:h-[52px]">
+        {errorMessage && (
+          <p className="text-center text-sm sm:p-4 animate-pulse">
+            {errorMessage}
+          </p>
+        )}
+        {isGameWon && (
+          <p className="text-center text-sm sm:p-4 animate-pulse">
             The correct answer is{" "}
             <Link
-              href={`https://www.merriam-webster.com/dictionary/${WORDLE_ANSWER.toLowerCase()}`}
+              href={`https://www.merriam-webster.com/dictionary/${targetWord.toLowerCase()}`}
               target="_blank"
               rel="noopener noreferrer"
               className="underline"
             >
-              {WORDLE_ANSWER}
+              {targetWord}
             </Link>
           </p>
         )}
-        {message && message === "You lose!" && (
+        {isGameOver && !isGameWon && (
           <div className="flex flex-col items-center justify-center">
-            <p className="text-center text-sm p-4 animate-pulse">
-              {`You lose! :(`} <button onClick={() => window.location.reload()} className="ml-2 underline">Play again</button>
+            <p className="text-center text-sm sm:p-4 animate-pulse">
+              {`You lose! :(`}{" "}
+              <button
+                onClick={() => window.location.reload()}
+                className="ml-2 underline"
+              >
+                Play again
+              </button>
             </p>
-            
           </div>
         )}
       </div>
-      <div className="keyboard-container flex flex-col items-center justify-start h-48 gap-1 pb-4">
+      <div className="keyboard-container flex flex-col items-center justify-start h-48 gap-1">
         {keyboard.map((row, rowIndex) => (
           <div
             key={rowIndex}
@@ -251,53 +244,46 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
                       : letter === "Backspace"
                         ? "44px"
                         : "32px",
-                  backgroundColor: keyboardGuesses.some(
-                    (guess) =>
-                      guess.letter === letter && guess.status === "correct"
-                  )
+                  backgroundColor: guesses
+                    .flat()
+                    .some(
+                      (guess) =>
+                        guess.letter === letter && guess.status === "correct"
+                    )
                     ? "green"
-                    : keyboardGuesses.some(
-                          (guess) =>
-                            guess.letter === letter &&
-                            guess.status === "present"
-                        )
-                      ? "#fca311"
-                      : keyboardGuesses.some(
+                    : guesses
+                          .flat()
+                          .some(
                             (guess) =>
                               guess.letter === letter &&
-                              guess.status === "absent"
+                              guess.status === "present"
                           )
+                      ? "#fca311"
+                      : guesses
+                            .flat()
+                            .some(
+                              (guess) =>
+                                guess.letter === letter &&
+                                guess.status === "absent"
+                            )
                         ? "gray"
                         : "",
                 }}
                 onClick={() => {
                   if (letter !== "Backspace" && letter !== "Enter") {
-                    handleChange(
-                      guessCount,
-                      boardForm[guessCount].filter((cell) => !!cell).length,
-                      letter
-                    );
+                    handleKeyDown({ key: letter } as KeyboardEvent);
                   } else if (letter === "Backspace") {
-                    handleChange(
-                      guessCount,
-                      boardForm[guessCount].filter((cell) => !!cell).length
-                        ? boardForm[guessCount].filter((cell) => !!cell)
-                            .length - 1
-                        : 0,
-                      ""
-                    );
+                    handleKeyDown({ key: "Backspace" } as KeyboardEvent);
                   } else if (letter === "Enter") {
-                    handleSubmit();
+                    handleKeyDown({ key: "Enter" } as KeyboardEvent);
                   }
                 }}
-                disabled={
-                  (letter === "Enter" &&
-                  boardForm[guessCount].filter((cell) => !!cell).length !== 5) ||
-                  (letter === "Backspace" &&
-                  boardForm[guessCount].filter((cell) => !!cell).length === 0)
-                }
               >
-                {letter === "Backspace" ? <BackspaceIcon className="size-6" /> : letter}
+                {letter === "Backspace" ? (
+                  <BackspaceIcon className="size-6" />
+                ) : (
+                  letter
+                )}
               </Button>
             ))}
           </div>

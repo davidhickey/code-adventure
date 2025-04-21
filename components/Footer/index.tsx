@@ -3,8 +3,8 @@ import Link from "next/link";
 const Footer = () => {
   return (
     <footer className="bg-lSecCream dark:bg-dSecDarkBlue">
-    <div className="mx-auto w-full p-6 lg:p-8">
-      <hr className="my-6 border-lPrimaryGreen sm:mx-auto dark:border-dSecMaize lg:my-8" />
+    <div className="mx-auto w-full pb-2 pt-6 px-6 lg:px-8">
+      <hr className="my-2 border-lPrimaryGreen sm:mx-auto dark:border-dSecMaize" />
       <div className="flex flex-row items-center justify-between">
           <span className="text-sm text-lPrimaryGreen dark:text-dPrimaryGray sm:text-center">© 2025 David Hickey</span>
           <div className="flex justify-center items-center sm:mt-0">

@@ -62,9 +62,9 @@ const WordGallery = ({ lyrics }: { lyrics: LyricsData }) => {
   if (rawLyrics.length === 0) return <div>No lyrics found.</div>;
 
   return (
-    <div className="min-h-screen h-full w-full bg-lSecCream dark:bg-dSecDarkBlue text-lPrimaryGreen dark:text-dPrimaryGray rounded-md border border-lPrimaryGreen dark:border-dSecMaize relative">
+    <div className="min-h-[400px] sm:min-h-[600px] w-full max-w-[1200px] mx-auto bg-lSecCream dark:bg-dSecDarkBlue text-lPrimaryGreen dark:text-dPrimaryGray rounded-md border border-lPrimaryGreen dark:border-dSecMaize relative">
       <div className="words-so-far-container absolute top-0 left-0 p-4">
-        <h2 className="text-xl font-bold">
+        <h2 className="text-md sm:text-lg font-bold">
           Lyrics: {currentWordInSong + 1}/{rawLyrics?.length}
         </h2>
         {currentWordInSong !== null && structuredLyrics && (
@@ -72,7 +72,7 @@ const WordGallery = ({ lyrics }: { lyrics: LyricsData }) => {
             {structuredLyrics.map((line, index) => {
               return (
                 line.some((word) => word.index <= currentWordInSong) && (
-                  <p key={index}>
+                  <p key={index} className="text-sm sm:text-md">
                     {line.map(
                       (word, i) =>
                         word.index <= currentWordInSong && (
@@ -126,9 +126,9 @@ const WordGallery = ({ lyrics }: { lyrics: LyricsData }) => {
       </div>
       <Canvas
         dpr={[1, 2]}
-        camera={{ position: [0, 0, 125], fov: 90 }}
-        style={{ height: "100vh" }}
-        className="h-full min-h-screen w-full"
+        camera={{ position: [0, 0, 125], fov: 50 }}
+        style={{ height: "600px" }}
+        className="h-full w-full"
       >
         <Suspense fallback={null}>
           <group rotation={[10, 10.5, 10]}>

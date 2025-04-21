@@ -70,21 +70,21 @@ const LyricsGame = () => {
 
   return (
     <div className="text-lPrimaryGreen dark:text-dPrimaryGray">
-      <h1 className="text-3xl sm:text-5xl py-4 text-center">Lyrics Game</h1>
-      <div className="flex gap-4 flex-col items-center pb-8">
-        <p className="text-center text-xl">{`Search for a song and artist and try to guess the lyrics in order.`}</p>
+      <h1 className="text-3xl sm:text-5xl text-center">Lyrics Game</h1>
+      <div className="flex gap-4 flex-col items-center pb-4">
+        <p className="text-center text-sm">{`Search for a song and artist and try to guess the lyrics in order.`}</p>
         <div className="lyrics-search-container flex justify-center items-center relative">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:flex-row" onFocus={() => setErrMessage(null)}>
-            <div className="flex flex-col gap-1">
+          <form onSubmit={handleSubmit} className="flex gap-4 flex-row" onFocus={() => setErrMessage(null)}>
+            <div className="flex flex-col gap-1 w-[100px] sm:w-[180px]">
               <label htmlFor="artist">Artist:</label>
               <input type="text" name="artist" id="artist" value={lyricForm.artist} onChange={handleChange} className="text-lPrimaryGreen dark:text-dSecDarkBlue border border-lPrimaryGreen dark:border-dSecMaize rounded-md p-2" placeholder="Neil Young" style={{border: errMessage ? "1px solid #ef4444" : ""}}/>
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1  w-[100px] sm:w-[180px]">
               <label htmlFor="song">Song:</label>
               <input type="text" name="song" id="song" value={lyricForm.song} onChange={handleChange} className="text-lPrimaryGreen dark:text-dSecDarkBlue border border-lPrimaryGreen dark:border-dSecMaize rounded-md p-2" placeholder="Harvest Moon" style={{border: errMessage ? "1px solid #ef4444" : ""}}/>
             </div>
-            <div className="flex flex-col gap-1 sm:self-end">
-              <Button className="min-w-[200px]" type="submit" variant="primary">{isLoading ? <span className="animate-pulse">Loading</span>:<span>Submit</span>}</Button>
+            <div className="flex flex-col gap-1 self-end">
+              <Button className="w-[100px]" type="submit" variant="primary">{isLoading ? <span className="animate-pulse">Loading</span>:<span>Submit</span>}</Button>
             </div>
           </form>
           {(errMessage && !isLoading) && <div className="text-red-500 absolute bottom-[-1rem] left-0 text-xs">{errMessage}</div>}
