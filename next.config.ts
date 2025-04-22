@@ -30,6 +30,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.glsl$/,
+      use: ['raw-loader'],
+      type: 'asset/source',
+    });
+    return config;
+  },
   transpilePackages: ['three']
 };
 

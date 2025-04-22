@@ -25,6 +25,7 @@
     "next-sanity": "^9.10.2",
     "openai": "^4.83.0",
     "random-words": "^2.0.1",
+    "raw-loader": "^4.0.2",
     "react": "^19.0.0",
     "react-dom": "19.0.0",
     "react-photo-album": "^3.0.2",
