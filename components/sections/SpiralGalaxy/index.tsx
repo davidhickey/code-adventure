@@ -81,7 +81,7 @@ const SpiralGalaxy = () => {
       <Canvas camera={{ position: [1.0, 1.0, 1.0], fov: 105 }}>
         <ambientLight intensity={0.1} />
         <CustomGeometryParticles count={10000} />
-        <OrbitControls enableZoom={false} />
+        <OrbitControls enableZoom={false} enablePan={false} enableRotate={false} />
       </Canvas>
     </div>
   );
