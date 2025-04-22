@@ -6,7 +6,6 @@ import * as THREE from "three";
 
 import vertexShader from "!!raw-loader!./vertexShader.glsl";
 import fragmentShader from "!!raw-loader!./fragmentShader.glsl"; 
-import { rotate } from "maath/dist/declarations/src/buffer";
 
 const CustomGeometryParticles = (props: { count: number }) => {
   const { count } = props;
