@@ -68,7 +68,8 @@ export function Word({
       {...props}
       onPointerOver={over}
       onPointerOut={out}
-      onClick={() => emitCurrentWord(id, word)}
+      onPointerDown={() => emitCurrentWord(id, word)}
+      // onClick={() => emitCurrentWord(id, word)}
     >
       <Text ref={ref} {...fontProps}>
         {word}
