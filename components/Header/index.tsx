@@ -143,7 +143,10 @@ const Header = () => {
               </div>
               <div className="py-6">
                 <button
-                  onClick={toggleTheme}
+                  onClick={() => {
+                    toggleTheme();
+                    setMobileMenuOpen(false);
+                  }}
                   className="text-lPrimaryGreen dark:text-dPrimaryGray"
                 >
                   {isDarkTheme ? (
