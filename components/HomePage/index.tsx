@@ -8,7 +8,7 @@ const HomePage = async ({children}:{children?: React.ReactNode}) => {
         <SpiralGalaxy />
       </div>
       <div className="absolute h-screen top-0 left-0 right-0 py-40 flex items-center dark:items-start justify-self-center sm:py-60">
-        <h1 className="text-center text-5xl sm:text-8xl text-lPrimaryGreen dark:text-dPrimaryGray">{`Welcome :)`}</h1>
+        <h1 className="text-center w-full text-5xl sm:text-8xl text-lPrimaryGreen dark:text-dPrimaryGray">{`Welcome :)`}</h1>
       </div>
       {children && <div>{children}</div>}
     </div>
