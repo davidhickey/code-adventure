@@ -250,7 +250,7 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
                       (guess) =>
                         guess.letter === letter && guess.status === "correct"
                     )
-                    ? "green"
+                    ? letterBgColor("correct")
                     : guesses
                           .flat()
                           .some(
@@ -258,7 +258,7 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
                               guess.letter === letter &&
                               guess.status === "present"
                           )
-                      ? "#fca311"
+                      ? letterBgColor("present")
                       : guesses
                             .flat()
                             .some(
@@ -266,7 +266,7 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
                                 guess.letter === letter &&
                                 guess.status === "absent"
                             )
-                        ? "gray"
+                        ? letterBgColor("absent")
                         : "",
                 }}
                 onClick={() => {
