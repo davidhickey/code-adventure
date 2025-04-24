@@ -123,7 +123,7 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
   }, [handleKeyDown]);
 
   return (
-    <div className="wordle-main-container relative flex flex-col justify-self-center items-center max-h-[calc(100vh-141px)] lg:max-h-[calc(100vh-149px)] justify-center w-full bg-lSecCream dark:bg-dSecDarkBlue text-lPrimaryGreen dark:text-dPrimaryGray">
+    <div className="wordle-main-container relative flex flex-col justify-self-center items-center justify-center w-full bg-lSecCream dark:bg-dSecDarkBlue text-lPrimaryGreen dark:text-dPrimaryGray">
       <div className="flex flex-col items-center justify-center pb-4 sm:pb-10">
         <h1 className="text-3xl sm:text-5xl text-center sm:pt-4 sm:px-4">
           Wordle
@@ -226,7 +226,7 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
           </div>
         )}
       </div>
-      <div className="keyboard-container flex flex-col items-center justify-start h-48 gap-1">
+      <div className="keyboard-container flex flex-col items-center justify-start h-[152px] sm:h-48 gap-1">
         {keyboard.map((row, rowIndex) => (
           <div
             key={rowIndex}
