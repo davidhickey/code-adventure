@@ -13,8 +13,8 @@ export type LyricsData = string[][] | null;
 const LyricsGame = () => {
   const [lyrics, setLyrics] = useState<LyricsData>([]);
   const [lyricForm, setLyricForm] = useState<LyricFormData>({
-    artist: "Bob Marley",
-    song: "Three Little Birds"
+    artist: "Queen",
+    song: "Bohemian Rhapsody"
   });
   const [errMessage, setErrMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);

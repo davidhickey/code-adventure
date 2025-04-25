@@ -41,10 +41,10 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
   const targetWord = wordleAnswer.toUpperCase();
 
   const evaluatedGuess = (guess: string): EvaluatedGuess => {
-    const result = Array(WORD_LENGTH).fill({
+    const result: EvaluatedGuess = Array(WORD_LENGTH).fill(null).map(() => ({
       letter: "",
       status: "absent",
-    });
+    }));
     const currentGuessArr = guess.split("");
     const targetWordArr = targetWord.split("");
 
@@ -269,15 +269,7 @@ const WordleMain = ({ wordleAnswer }: { wordleAnswer: string }) => {
                         ? letterBgColor("absent")
                         : "",
                 }}
-                onClick={() => {
-                  if (letter !== "Backspace" && letter !== "Enter") {
-                    handleKeyDown({ key: letter } as KeyboardEvent);
-                  } else if (letter === "Backspace") {
-                    handleKeyDown({ key: "Backspace" } as KeyboardEvent);
-                  } else if (letter === "Enter") {
-                    handleKeyDown({ key: "Enter" } as KeyboardEvent);
-                  }
-                }}
+                onClick={() => handleKeyDown({ key: letter } as KeyboardEvent)}
               >
                 {letter === "Backspace" ? (
                   <BackspaceIcon className="size-6" />

@@ -9,7 +9,7 @@ interface WordProps {
   word: string;
   id: number;
   currentWordInSong: number | null;
-  emitCurrentWord: (id: number, word: string) => void;
+  emitCurrentWordAction: (id: number, word: string) => void;
   position: THREE.Vector3 | string | string[];
 }
 
@@ -17,7 +17,7 @@ export function Word({
   word,
   id,
   currentWordInSong,
-  emitCurrentWord,
+  emitCurrentWordAction,
   position,
   ...props
 }: WordProps) {
@@ -68,7 +68,7 @@ export function Word({
       {...props}
       onPointerOver={over}
       onPointerOut={out}
-      onPointerDown={() => emitCurrentWord(id, word)}
+      onPointerDown={() => emitCurrentWordAction(id, word)}
       // onClick={() => emitCurrentWord(id, word)}
     >
       <Text ref={ref} {...fontProps}>

@@ -9,7 +9,7 @@ interface CloudProps {
   count: number;
   radius: number;
   currentWordInSong: number | null;
-  emitCurrentWord: (id: number, word: string) => void;
+  emitCurrentWordAction: (id: number, word: string) => void;
 }
 
 export function Cloud({
@@ -17,7 +17,7 @@ export function Cloud({
   count = 4,
   radius = 20,
   currentWordInSong,
-  emitCurrentWord,
+  emitCurrentWordAction,
 }: CloudProps) {
   const words = useMemo(() => {
     const temp: [THREE.Vector3, string][] = [];
@@ -53,7 +53,7 @@ export function Cloud({
       word={lyric.word as string}
       id={lyric.id}
       currentWordInSong={currentWordInSong}
-      emitCurrentWord={emitCurrentWord}
+      emitCurrentWordAction={emitCurrentWordAction}
       position={pos}
     />
   ));

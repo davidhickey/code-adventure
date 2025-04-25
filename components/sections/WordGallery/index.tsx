@@ -82,7 +82,7 @@ const WordGallery = ({ lyrics }: { lyrics: LyricsData }) => {
                               "text-lSecDarkGreen dark:text-dPrimaryGray"
                             }
                           >
-                            {word.word}{" "}
+                            {word.word !== "?" ? " ": ""}{word.word}
                           </span>
                         )
                     )}
@@ -138,7 +138,7 @@ const WordGallery = ({ lyrics }: { lyrics: LyricsData }) => {
                 count={Math.sqrt(paginatedRawLyrics.length + 1)}
                 radius={paginatedRawLyrics.length}
                 currentWordInSong={currentWordInSong}
-                emitCurrentWord={handleUpdateCurrentWord}
+                emitCurrentWordAction={handleUpdateCurrentWord}
               />
             )}
           </group>
