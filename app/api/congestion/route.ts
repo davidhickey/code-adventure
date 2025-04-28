@@ -29,7 +29,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       `https://data.ny.gov/resource/t6yz-b64h.json?${encodedQuery}`,
       {
         headers: {
-          "X-App-Token": "2PXTBN06MfTwGhCgS7m7feRPb",
+          "X-App-Token": process.env.CONGESTION_API_TOKEN ?? "",
         },
         method: "GET",
       }
