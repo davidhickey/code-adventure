@@ -4,8 +4,8 @@ import { useEffect } from "react";
 
 const parseData = (
   data: { __dimension_alias__: string; __measure_alias__: string }[]
-): { date: string; crz_entries: number }[] => {
-  const crzEntriesByDate = data.map((item: any) => ({
+): CongestionData[] => {
+  const crzEntriesByDate = data.map((item: { __dimension_alias__: string; __measure_alias__: string }) => ({
     date: new Date(item.__dimension_alias__).toLocaleDateString("en-US", {
       year: "numeric",
       month: "2-digit",
@@ -17,6 +17,11 @@ const parseData = (
   return crzEntriesByDate;
 };
 
+type CongestionData = {
+  date: string;
+  crz_entries: number;
+};
+
 type FilterParams = {
   vehicleClass?: VehicleClasses | "all";
 };
@@ -26,7 +31,7 @@ const useCongestionData = ({
 }: {
   filterParams?: FilterParams;
 }) => {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<CongestionData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,25 +48,22 @@ const useCongestionData = ({
       const response = await fetch(fullUrl);
       const { data, error, status } = await response.json();
       if (status !== 200 || error) {
-        throw new Error(error, {
-          cause: status,      
-        });
-      }
-      
-      const parsedData = parseData(data);
-      console.log('parsedData', parsedData);
-      setData(parsedData);
-    } catch (error: any) {
-      console.error(`Error fetching congestion data. Status: ${error.cause}`, error);
-      if (error instanceof Error) {
-        if (error.cause === 400) {
-          setError("Invalid vehicle class. Please try again.");
-        } else {
-          setError("An unknown error occurred. Please try again.");
+        if (status === 400) {
+          throw new Error("Invalid vehicle class. Please try again.");
         }
+        throw new Error("An unknown error occurred. Please try again.");
+      }
+
+      const parsedData = parseData(data);
+      // console.log('parsedData', parsedData);
+      setData(parsedData);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
       } else {
         setError("An unknown error occurred. Please try again.");
       }
+      console.error(`Error fetching congestion data.`, error);
     } finally {
       setIsLoading(false);
     }

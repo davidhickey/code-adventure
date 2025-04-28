@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export enum VehicleClassesEnum {
+enum VehicleClassesEnum {
   cars = "1 - Cars, Pickups and Vans",
   trucks = "2 - Single-Unit Trucks",
   multiUnitTrucks = "3 - Multi-Unit Trucks",
@@ -11,7 +11,7 @@ export enum VehicleClassesEnum {
 
 export type VehicleClasses = keyof typeof VehicleClassesEnum;
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   const baseQuery = `SELECT date_trunc_ymd(toll_date) AS __dimension_alias__, SUM(crz_entries) AS __measure_alias__ WHERE toll_date IS NOT NULL AND toll_date < '9999-01-01' AND toll_date >= '1000-01-01' AND (1=1) GROUP BY date_trunc_ymd(toll_date) LIMIT 1001`;
 
   try {
@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
 
     const data = await response.json();
     return NextResponse.json({ data, status: 200 });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Server API Error:", error);
     return NextResponse.json({ error: "Server API Error", status: 500, data: null });
   }

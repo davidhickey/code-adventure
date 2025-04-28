@@ -3,8 +3,6 @@
 import {
   VictoryChart,
   VictoryLine,
-  VictoryTheme,
-  VictoryGroup,
   VictoryAxis,
   VictoryVoronoiContainer,
   VictoryTooltip,
@@ -91,7 +89,6 @@ const CongestionMain = () => {
               voronoiDimension="x"
               labelComponent={<VictoryTooltip/>}
               labels={({ datum }) => {
-                console.log(datum);
                 return datum.y;
               }}
             />
