@@ -1,7 +1,9 @@
 "use client";
-import { VictoryChart, VictoryLine, VictoryTheme, VictoryGroup } from "victory";
 
-const CongestionMain = ({ congestionData }: { congestionData: any }) => {
+import { VictoryChart, VictoryLine, VictoryTheme, VictoryGroup } from "victory";
+import useCongestionData from "../hooks/useCongestionData";
+const CongestionMain = () => {
+  const { data, isLoading, error } = useCongestionData({});
   return (
     <div className="w-full h-full">
       <VictoryChart
@@ -10,7 +12,7 @@ const CongestionMain = ({ congestionData }: { congestionData: any }) => {
         theme={VictoryTheme.material}
       >
         <VictoryLine
-          data={congestionData}
+          data={data}
           x="date"
           y="crz_entries"
           interpolation="natural"
