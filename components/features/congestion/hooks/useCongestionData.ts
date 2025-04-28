@@ -47,11 +47,9 @@ const useCongestionData = ({
           cause: status,      
         });
       }
-      console.log(
-        `fetchCongestionData with ${filterParams?.vehicleClass} vehicles useHook api data`,
-        data
-      );
+      
       const parsedData = parseData(data);
+      console.log('parsedData', parsedData);
       setData(parsedData);
     } catch (error: any) {
       console.error(`Error fetching congestion data. Status: ${error.cause}`, error);

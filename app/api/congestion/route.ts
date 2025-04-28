@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
       query = `SELECT date_trunc_ymd(toll_date) AS __dimension_alias__, SUM(crz_entries) AS __measure_alias__ WHERE ${vehicleClassQuery} toll_date IS NOT NULL AND toll_date < '9999-01-01' AND toll_date >= '1000-01-01' AND (1=1) GROUP BY date_trunc_ymd(toll_date) LIMIT 1001`;
     }
 
-    const encodedQuery = `$queryk=${encodeURIComponent(query)}`;
+    const encodedQuery = `$query=${encodeURIComponent(query)}`;
 
     const response = await fetch(
       `https://data.ny.gov/resource/t6yz-b64h.json?${encodedQuery}`,
