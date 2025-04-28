@@ -42,7 +42,6 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     const data = await response.json();
     return NextResponse.json({ data, status: 200 });
   } catch (error: unknown) {
-    console.error("Server API Error:", error);
     return NextResponse.json({ error: "Server API Error", status: 500, data: null });
   }
 }
