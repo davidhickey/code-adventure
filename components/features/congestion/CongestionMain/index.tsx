@@ -2,27 +2,71 @@
 
 import { VictoryChart, VictoryLine, VictoryTheme, VictoryGroup } from "victory";
 import useCongestionData from "../hooks/useCongestionData";
+import { VehicleClasses } from "@/app/api/congestion/route";
+import { useState } from "react";
+
+const vehicleClassesSelectOptions: Record<VehicleClasses | "all", string> = {
+  all: "All",
+  cars: "Cars",
+  trucks: "Trucks",
+  multiUnitTrucks: "Multi-Unit Trucks",
+  buses: "Buses",
+  motorcycles: "Motorcycles",
+  taxis: "Taxis",
+};
 const CongestionMain = () => {
-  const { data, isLoading, error } = useCongestionData({});
+  const [selectedVehicleClass, setSelectedVehicleClass] = useState<
+    VehicleClasses | "all"
+  >("all");
+  const { data, isLoading, error } = useCongestionData({
+    filterParams: { vehicleClass: selectedVehicleClass as VehicleClasses },
+  });
   return (
     <div className="w-full h-full">
-      <VictoryChart
-        height={400}
-        width={400}
-        theme={VictoryTheme.material}
-      >
-        <VictoryLine
-          data={data}
-          x="date"
-          y="crz_entries"
-          interpolation="natural"
-          style={{
-            data: {
-              stroke: "red",
-            },
-          }}
-        />
-      </VictoryChart>
+      <div className="congestion-line-chart-container">
+        <div className="header">
+          <h1>Congestion</h1>
+          <div className="filter-container">
+            <label htmlFor="vehicleClass">Vehicle Class</label>
+            <select
+              name="vehicleClass"
+              id="vehicleClass"
+              onChange={(e) =>
+                setSelectedVehicleClass(
+                  e.target.value as VehicleClasses | "all"
+                )
+              }
+            >
+              {Object.entries(vehicleClassesSelectOptions).map(
+                ([key, value]) => (
+                  <option key={key} value={key}>
+                    {value}
+                  </option>
+                )
+              )}
+            </select>
+          </div>
+        </div>
+        <div className="body">
+          {isLoading && <div>Loading...</div>}
+          {error && <div>Error: {error}</div>}
+          {!isLoading && !error && (
+            <VictoryChart height={400} width={400} theme={VictoryTheme.material}>
+              <VictoryLine
+                data={data}
+                x="date"
+                y="crz_entries"
+                interpolation="natural"
+              style={{
+                data: {
+                  stroke: "red",
+                },
+              }}
+              />
+            </VictoryChart>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

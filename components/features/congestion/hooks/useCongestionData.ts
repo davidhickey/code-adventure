@@ -1,8 +1,10 @@
 import { useMemo, useState } from "react";
-import { VehicleClass } from "@/app/api/congestion/route";
+import { VehicleClasses } from "@/app/api/congestion/route";
 import { useEffect } from "react";
 
-const parseData = (data: { __dimension_alias__: string; __measure_alias__: string }[]): { date: string; crz_entries: number }[] => {
+const parseData = (
+  data: { __dimension_alias__: string; __measure_alias__: string }[]
+): { date: string; crz_entries: number }[] => {
   const crzEntriesByDate = data.map((item: any) => ({
     date: new Date(item.__dimension_alias__).toLocaleDateString("en-US", {
       year: "numeric",
@@ -16,35 +18,52 @@ const parseData = (data: { __dimension_alias__: string; __measure_alias__: strin
 };
 
 type FilterParams = {
-  vehicleClass?: VehicleClass;
-}
+  vehicleClass?: VehicleClasses | "all";
+};
 
-const useCongestionData = ({filterParams}: {filterParams?: FilterParams}) => {
+const useCongestionData = ({
+  filterParams,
+}: {
+  filterParams?: FilterParams;
+}) => {
   const [data, setData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-
   const fullUrl = useMemo(() => {
     const queryParams = new URLSearchParams();
-    if (filterParams?.vehicleClass) {
-      queryParams.set('vehicleClass', filterParams.vehicleClass);
+    if (filterParams?.vehicleClass && filterParams.vehicleClass !== "all") {
+      queryParams.set("vehicleClass", filterParams.vehicleClass);
     }
     return `${process.env.NEXT_PUBLIC_BASE_URL}/api/congestion?${queryParams.toString()}`;
   }, [filterParams]);
 
   const fetchCongestionData = async () => {
     try {
-      const response = await fetch(
-        fullUrl,
+      const response = await fetch(fullUrl);
+      const { data, error, status } = await response.json();
+      if (status !== 200 || error) {
+        throw new Error(error, {
+          cause: status,      
+        });
+      }
+      console.log(
+        `fetchCongestionData with ${filterParams?.vehicleClass} vehicles useHook api data`,
+        data
       );
-    const {data, error, status} = await response.json();
-    console.log('useHook api data', data);
       const parsedData = parseData(data);
       setData(parsedData);
-    } catch (error) {
-      console.error("Error fetching congestion data:", error);
-      setError(error as string);
+    } catch (error: any) {
+      console.error(`Error fetching congestion data. Status: ${error.cause}`, error);
+      if (error instanceof Error) {
+        if (error.cause === 400) {
+          setError("Invalid vehicle class. Please try again.");
+        } else {
+          setError("An unknown error occurred. Please try again.");
+        }
+      } else {
+        setError("An unknown error occurred. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -52,7 +71,7 @@ const useCongestionData = ({filterParams}: {filterParams?: FilterParams}) => {
 
   useEffect(() => {
     fetchCongestionData();
-  }, []);
+  }, [fullUrl]);
 
   return { data, isLoading, error };
 };
