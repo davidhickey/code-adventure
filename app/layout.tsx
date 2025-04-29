@@ -21,9 +21,13 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "DH",
   description: "DH's Website",
-  icons: {
-    icon: "/DH-meta-icon.png",
-  },
+  icons: [
+    {
+      url: "../public/DH-meta-icon.png",
+      sizes: '100x100',
+      type: 'image/png',
+    },
+  ]
 };
 
 export default function RootLayout({
