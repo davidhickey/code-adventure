@@ -4,7 +4,7 @@ const Footer = () => {
   return (
     <footer className="z-50 relative">
     <div className="mx-auto w-full pb-2 pt-6 px-6 lg:px-8">
-      <hr className="my-2 border-lPrimaryGreen sm:mx-auto dark:border-dSecMaize" />
+      <hr className="my-2 border-lPrimaryGreen sm:mx-auto dark:border-dPrimaryGray" />
       <div className="flex flex-row items-center justify-between">
           <span className="text-sm text-lPrimaryGreen dark:text-dPrimaryGray sm:text-center">© 2025 David Hickey</span>
           <div className="flex justify-center items-center sm:mt-0">
