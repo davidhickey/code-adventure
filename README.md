@@ -9,5 +9,6 @@ This is a [Next.js](https://nextjs.org) project serving as my portfolio website.
 - three.js - for 3D animations and games
 
 ## APIs Used
-- Nasa Open APIs - for space exploration data
-- Lyrics API - for lyrics of songs
+- Nasa Open APIs - for NASA images
+- Lyrics API - for lyrics game
+- Random Word API - for wordle
