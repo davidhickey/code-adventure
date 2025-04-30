@@ -20,7 +20,6 @@ const getWordleAnswer = async (): Promise<{ word: string } | null> => {
 
 const Wordle = async () => {
   const wordleAnswer = await getWordleAnswer();
-  console.log(wordleAnswer);
 
   if (!wordleAnswer) {
     return <div>Error fetching today&apos;s wordle data.</div>;
