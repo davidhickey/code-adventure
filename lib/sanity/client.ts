@@ -1,9 +1,10 @@
 import { createClient, type ClientConfig } from "@sanity/client";
+import { dataset, projectId, apiVersion } from "./api";
 
 const config: ClientConfig = {
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
-  apiVersion: "2024-04-17",
+  projectId: projectId || "",
+  dataset: dataset || "",
+  apiVersion: apiVersion || "",
   useCdn: false,
 };
 

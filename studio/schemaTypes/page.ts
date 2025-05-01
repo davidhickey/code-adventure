@@ -31,19 +31,35 @@ const page = defineType({
       validation: (Rule) => Rule.required(),
       description: 'The URL path of the page.',
     }),
+    defineField({
+      name: 'isDynamicRoute',
+      title: 'Is Dynamic Route',
+      type: 'boolean',
+      description: 'If true, the page will be rendered as a dynamic route.',
+    }),
+    defineField({
+      name: 'sections',
+      title: 'Sections',
+      type: 'array',
+      of: [{ type: 'hero' }],
+    }),
   ],
   preview: {
     select: {
       title: 'name',
       slug: 'slug.current',
+      isDynamicRoute: 'isDynamicRoute',
     },
     prepare(selection) {
-      const { title, slug } = selection;
+      const { title, slug, isDynamicRoute } = selection;
       return {
         title,
-        subtitle: '/' + slug,
+        subtitle: `/${isDynamicRoute ? 'pages/' : ''}` + slug,
       };
     },
+  },
+  initialValue: {
+    isDynamicRoute: true,
   },
 });
 

@@ -48,7 +48,7 @@ export const renderNextImage = (
         alt={alt}
         title={title}
         sizes={sizes}
-        className="!width-auto !height-full object-cover !object-center rounded-md cursor-pointer hover:scale-105 transition-all duration-300"
+        className="!width-auto !height-full object-cover !object-center rounded-xl cursor-pointer hover:scale-105 transition-all duration-300"
         placeholder={"blurDataURL" in photo ? "blur" : undefined}
       />
     </div>

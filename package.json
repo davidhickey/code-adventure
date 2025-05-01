@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "studio": "sanity dev",
+    "studio:build": "sanity deploy"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
@@ -14,6 +16,7 @@
     "@react-three/drei": "^9.121.2",
     "@react-three/fiber": "^9.0.0-alpha.8",
     "@sanity/client": "^6.28.3",
+    "@sanity/color-input": "^4.0.3",
     "@sanity/icons": "^3.7.0",
     "@sanity/image-url": "1",
     "@sanity/types": "^3.79.0",
