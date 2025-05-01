@@ -21,14 +21,12 @@ export type ImageGalleryItem = {
   title?: string;
 };
 
-const ImageGallery = ({album, title}: {album: ImageGalleryItem[], title?:string}) => {
+const ImageGallery = ({album}: {album: ImageGalleryItem[]}) => {
   const [selectedImage, setSelectedImage] = useState<ImageGalleryItem | null>(null);
   useDisableBodyScroll(selectedImage !== null);
 
   return (
     <div className="image-gallery-container text-lPrimaryGreen dark:text-dPrimaryGray">
-      {title && <h2 className="text-xl sm:text-3xl font-semibold w-full text-center py-8">{title}</h2>}
-    
       <div className="photo-album-wrapper">
       <InfiniteScroll photos={album} fetch={fetchMoreApodData} onClick={({photo}) => setSelectedImage(photo ?? null)} loading={<div className="animate-pulse w-full text-center py-8 pt-12 text-2xl sm:text-3xl">Loading...</div>}>
         <RowsPhotoAlbum

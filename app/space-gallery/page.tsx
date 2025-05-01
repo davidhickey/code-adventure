@@ -3,30 +3,30 @@ import { notFound } from "next/navigation";
 import ImageGallery from "@/components/sections/ImageGallery";
 import { fetchApodData } from "@/lib/apis/nasa";
 import { transformNasaImagesToPhotoAlbum } from "@/components/sections/ImageGallery/helpers";
-import HeroSection from "@/components/sections/Hero";
+import { sanityFetch } from "@/studio/lib/query";
+import { getStaticPageBySlugQuery } from "@/studio/lib/query";
+import SanitySections from "@/components/sanity/Sections";
+import { SanityPage } from "@/studio/lib/types";
+
 const SpaceGallery: NextPage = async () => {
   const nasaImages = await fetchApodData({ count: 20 });
   if (!nasaImages) {
     return notFound();
   }
 
-  const heroApodData = await fetchApodData({ noCache: true });
-  if (!heroApodData) {
-    console.error("Failed to fetch APOD data and render it.");
-    return null;
-  }
-  console.log('heroApodData', heroApodData);
+  const sanityPage: SanityPage = await sanityFetch({
+    query: getStaticPageBySlugQuery,
+    params: { slug: "space-gallery" },
+  });
+  const sections = sanityPage?.sections;
 
   return (
     <>
-      <HeroSection>
-        <h2 className="text-xl sm:text-3xl font-semibold w-full text-center py-8">NASA Pictures of the Day</h2>
-      </HeroSection>
+      {sections && sections?.length > 0 && (
+        <SanitySections sections={sections} />
+      )}
       {nasaImages && nasaImages?.length > 0 && (
-        <ImageGallery
-          title={"NASA Pictures of the Day"}
-          album={transformNasaImagesToPhotoAlbum(nasaImages)}
-        />
+        <ImageGallery album={transformNasaImagesToPhotoAlbum(nasaImages)} />
       )}
     </>
   );

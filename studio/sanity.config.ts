@@ -2,7 +2,7 @@ import {defineConfig, SchemaTypeDefinition} from 'sanity'
 import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemaTypes'
-import { projectId, dataset } from "@/lib/sanity/api";
+import { projectId, dataset } from "@/studio/lib/api";
 import {colorInput} from '@sanity/color-input'
 
 

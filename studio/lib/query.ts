@@ -9,11 +9,14 @@ export const getAllPagesSlugQuery = groq`*[_type == "page" && defined(slug.curre
   "slug": slug.current
 }`;
 
+//dynamic pages
 export const getPagesSlugQuery = groq`*[_type == "page" && isDynamicRoute == true && defined(slug.current)] {
   "slug": slug.current
 }`;
 export const getPageBySlugQuery = groq`*[_type == "page" && isDynamicRoute == true && slug.current == $slug][0]`;
 
+
+//hardcoded pages
 export const getStaticPagesSlugQuery = groq`*[_type == "page" && isDynamicRoute == false && defined(slug.current)] {
   "slug": slug.current
 }`;

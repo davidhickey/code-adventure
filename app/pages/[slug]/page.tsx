@@ -1,4 +1,4 @@
-import { getPagesSlugQuery, getPageBySlugQuery, sanityFetch } from "@/lib/sanity/query";
+import { getPagesSlugQuery, getPageBySlugQuery, sanityFetch } from "@/studio/lib/query";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
