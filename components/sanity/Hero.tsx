@@ -29,7 +29,7 @@ const SanityHero: React.FC<HeroSection> = ({
             {title.text}
           </h1>
           <p
-            className="text-xs leading-tight sm:text-sm lg:text-[1rem] xl:text-xl"
+            className="text-xs font-semibold leading-tight sm:text-sm lg:text-[1rem] xl:text-xl"
             style={{
               color: isDarkTheme
                 ? subtitle.darkColor.hex
