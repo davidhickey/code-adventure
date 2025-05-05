@@ -4,8 +4,7 @@ import "./globals.css";
 import LandingPage from "@/components/LandingPage";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeContextProvider } from "@/store/";
-
-
+import Providers from "@/components/Providers";
 
 const geistSans = localFont({
   src: "../public/fonts/GeistVF.woff",
@@ -40,11 +39,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeContextProvider>
-          <LandingPage>
-            {children}
-          </LandingPage>
-        </ThemeContextProvider>
+        <Providers>
+          <ThemeContextProvider>
+            <LandingPage>
+              {children}
+            </LandingPage>
+          </ThemeContextProvider>
+        </Providers>
         <SpeedInsights />
       </body>
     </html>
