@@ -1,5 +1,7 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import type { NextAuthOptions } from "next-auth";
+import { verifyPassword } from "./utils";
+import { prisma } from "../prismaClient";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -10,17 +12,30 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        // Replace with your DB check (e.g., Prisma, Supabase, etc.)
-        const user = { id: "1", name: "Jane", email: "jane@example.com" };
+        try {
+          if (!credentials?.email || !credentials?.password) {
+            throw new Error("No credentials provided");
+          }
 
-        if (
-          credentials?.email === "jane@example.com" &&
-          credentials?.password === "password123"
-        ) {
-          return user;
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email }
+        });
+
+          if (!user) {
+            throw new Error("User not found");
+          }
+
+          const isValid = await verifyPassword(credentials.password, user.password);
+
+          if (!isValid) {
+            throw new Error("Invalid password");
+          }
+
+          return { id: user.id, email: user.email, name: user.name };
+        } catch (error) {
+          console.error("Error authorizing user:", error);
+          return null;
         }
-
-        return null;
       }
     })
   ],
