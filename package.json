@@ -9,7 +9,7 @@
     "lint": "next lint",
     "studio": "sanity dev",
     "studio:build": "sanity deploy",
-    "prisma:generate": "prisma generate"
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
