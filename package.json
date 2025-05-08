@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "studio": "sanity dev",
-    "studio:build": "sanity deploy"
+    "studio:build": "sanity deploy",
+    "prisma:generate": "prisma generate"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
