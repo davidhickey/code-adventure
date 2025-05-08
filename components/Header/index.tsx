@@ -11,6 +11,9 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import ThemeContext from "@/store";
+import { useSession, signIn, signOut } from "next-auth/react";
+import Button from "../elements/Button";
+
 
 const navigation = [
   { name: "Nasa Images", href: "/space-gallery", underConstruction: false },
@@ -21,6 +24,8 @@ const navigation = [
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isDarkTheme, toggleThemeHandler } = useContext(ThemeContext);
+  const { data: session } = useSession();
+
 
   const toggleTheme = () => {
     toggleThemeHandler();
@@ -83,6 +88,12 @@ const Header = () => {
               <MoonIcon className="size-8 hover:fill-lPrimaryGreen text-lPrimaryGreen" />
             )}
           </button>
+          {session ? (
+            <Button onClick={() => signOut()}>Sign Out</Button>
+          ) : (
+            <Button onClick={() => signIn()}>Sign In</Button>
+          )}
+
         </div>
       </nav>
       <Transition appear="true" show={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)}>
