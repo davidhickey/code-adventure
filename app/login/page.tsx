@@ -16,31 +16,51 @@ export default function LoginPage() {
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
 
-    const res = await signIn("credentials", {
-      redirect: false,
-      email,
-      password
-    });
+    try {
+      const res = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
+      });
 
-    console.log("res", res);
-
-    if (res?.ok) {
-      router.push("/account");
-    } else {
-      alert("Invalid credentials");
+      if (res?.ok) {
+        router.push("/account");
+      } else {
+        alert("Invalid credentials");
+      }
+    } catch (error) {
+      console.error("Error in handleLogin:", error);
     }
   }
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
-    const res = await fetch("/api/register", {
-      method: "POST",
-      body: JSON.stringify({ name, email, password })
-    });
-    if (res?.ok) {
-      router.push("/account");
-    } else {
-      alert("Invalid credentials");
+
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      if (res.ok) {
+        // Automatically log in after successful registration
+        const loginRes = await signIn("credentials", {
+          redirect: false,
+          email,
+          password,
+        });
+
+        if (loginRes?.ok) {
+          router.push("/account");
+        } else {
+          alert("Registration succeeded but login failed.");
+        }
+      } else {
+        const data = await res.json();
+        alert(data.error || "Registration failed.");
+      }
+    } catch (error) {
+      console.error("Error in handleSignup:", error);
     }
   }
 
@@ -48,16 +68,38 @@ export default function LoginPage() {
     <div className="login-page-content">
       {!showSignup ? (
         <form onSubmit={handleLogin}>
-          <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+          />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+          />
           <Button type="submit">Log In</Button>
           <Button onClick={() => setShowSignup(true)}>Sign Up</Button>
         </form>
       ) : (
         <form onSubmit={handleSignup}>
-          <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" />
-          <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Name"
+          />
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+          />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+          />
           <button type="submit">Sign Up</button>
           <Button onClick={() => setShowSignup(false)}>Log In</Button>
         </form>
