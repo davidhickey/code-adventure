@@ -22,6 +22,8 @@ export default function LoginPage() {
       password
     });
 
+    console.log("res", res);
+
     if (res?.ok) {
       router.push("/account");
     } else {
@@ -35,8 +37,10 @@ export default function LoginPage() {
       method: "POST",
       body: JSON.stringify({ name, email, password })
     });
-    if (res.ok) {
+    if (res?.ok) {
       router.push("/account");
+    } else {
+      alert("Invalid credentials");
     }
   }
 
